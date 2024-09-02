@@ -1,0 +1,122 @@
+{
+    "id": 1,
+    "username": "chapa77",
+    "email": "chapa@gmail.com",
+    "shoppingCart": {
+        "id": 1,
+        "products": [
+            {
+                "id": 1,
+                "name": "Cámara Digital",
+                "category": "Electrónica",
+                "stock": 20,
+                "price": 5000,
+                "description": "Cámara digital de alta resolución con zoom óptico.",
+                "image": null,
+                "amount": 1
+            },
+            {
+                "id": 2,
+                "name": "Auriculares Bluetooth",
+                "category": "Electrónica",
+                "stock": 35,
+                "price": 1500,
+                "description": "Auriculares inalámbricos con cancelación de ruido.",
+                "image": null,
+                "amount": 6
+            },
+            {
+                "id": 3,
+                "name": "Smartphone",
+                "category": "Electrónica",
+                "stock": 15,
+                "price": 7000,
+                "description": "Smartphone con pantalla de 6.5 pulgadas y 128GB de almacenamiento.",
+                "image": null,
+                "amount": 3
+            },
+            {
+                "id": 4,
+                "name": "Laptop Gaming",
+                "category": "Electrónica",
+                "stock": 10,
+                "price": 12000,
+                "description": "Laptop para juegos con tarjeta gráfica dedicada.",
+                "image": null,
+                "amount": 5
+            }
+        ]
+    },
+    "orders": [
+        {
+            "id": 1,
+            "date": "2023-04-01",
+            "state": "pendiente",
+            "totalPrice": 20000,
+            "check": "0917483",
+            "paymentMethod": "mercado pago",
+            "clientId": 1,
+            "SellerId": 1,
+            "SalesManagerId": 1
+        },
+        {
+            "id": 2,
+            "date": "2023-04-02",
+            "state": "confirmado",
+            "totalPrice": 15000,
+            "check": "0917484",
+            "paymentMethod": "tarjeta de crédito",
+            "clientId": 1,
+            "SellerId": 2,
+            "SalesManagerId": 2
+        },
+        {
+            "id": 3,
+            "date": "2023-04-03",
+            "state": "hecho",
+            "totalPrice": 25000,
+            "check": "0917485",
+            "paymentMethod": "efectivo",
+            "clientId": 1,
+            "SellerId": 3,
+            "SalesManagerId": 3
+        },
+        {
+            "id": 4,
+            "date": "2023-04-04",
+            "state": "anulado",
+            "totalPrice": 10000,
+            "check": "0917486",
+            "paymentMethod": "transferencia",
+            "clientId": 1,
+            "SellerId": 1,
+            "SalesManagerId": 2
+        },
+        {
+            "id": 5,
+            "date": "2023-04-05",
+            "state": "pendiente",
+            "totalPrice": 18000,
+            "check": "0917487",
+            "paymentMethod": "mercado pago",
+            "clientId": 1,
+            "SellerId": 2,
+            "SalesManagerId": 3
+        },
+        {
+            "id": 6,
+            "date": "2023-04-06",
+            "state": "confirmado",
+            "totalPrice": 21000,
+            "check": "0917488",
+            "paymentMethod": "tarjeta de crédito",
+            "clientId": 1,
+            "SellerId": 3,
+            "SalesManagerId": 1
+        }
+    ],
+    "profile": {
+        "id": 1,
+        "name": "client"
+    }
+}
