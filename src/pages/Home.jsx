@@ -11,6 +11,10 @@ import ErrorMessage from '../components/ErrorMessage'
 import Button from '../components/Button'
 import Screen from '../components/Screen'
 import ProductFilterCategory from '../components/product/ProductFilterCategory'
+import ProductCarrousel from '../components/product/ProductCarrousel'
+import Header from '../components/Header'
+import MagicButton from '../components/MagicButton'
+import CategoriesCarrousel from '../components/CategoriesCarrousel'
 
 function Home() {
 
@@ -55,35 +59,43 @@ function Home() {
           </Screen>
           : <></>
       }
-
-      <p className='sub-title'>Ultimos Agregados</p>
-      <p className='sub-title'>Descuentos</p>
-      <div className='product-filters'>
-        <ProductNextPage />
-        <div className='product-filter'>
-          <ProductFilterPrice start={start} end={end} error={error} getOnChange={getHandleChangePrice} onClick={handleClickInputPrice} />
-        </div>
-        <div className='product-filter'>
-          <Button onClick={handleClick}>{category !== '' ? category : 'Categorias'}</Button>
-        </div>
-        <div className='product-filter'>
-          <p>Ordenar por</p>
-          <ProductFilterOrder value={order} onChange={handleChangeOrder} />
-        </div>
+      <div>
+        <Header />
       </div>
       <div>
-        {
-          loanding
-            ? <div className='home__loading-container'>
-              <Loader />
-            </div>
-            : error
-              ? <ErrorMessage message='Error de servidor' />
-              : errorFilter
-                ? <ErrorMessage message='No se encontraron productos' />
-                : <ProductList products={filterProducts} />
-        }
+        <CategoriesCarrousel categories={categories} />
       </div>
+      <div className='home__products'>
+        <div className='product-filters'>
+          <ProductNextPage />
+          <div className='product-filter'>
+            <ProductFilterPrice start={start} end={end} error={error} getOnChange={getHandleChangePrice} onClick={handleClickInputPrice} />
+          </div>
+          <div className='product-filter'>
+            <Button onClick={handleClick}>{category !== '' ? category : 'Categorias'}</Button>
+          </div>
+          <div className='product-filter'>
+            <p>Ordenar por</p>
+            <ProductFilterOrder value={order} onChange={handleChangeOrder} />
+          </div>
+        </div>
+        <div>
+          {
+            loanding
+              ? <div className='home__loading-container'>
+                <Loader />
+              </div>
+              : error
+                ? <ErrorMessage message='Error de servidor' />
+                : errorFilter
+                  ? <ErrorMessage message='No se encontraron productos' />
+                  : <ProductList products={filterProducts} />
+          }
+        </div>
+      </div>
+      {/* <div className='football-container'>
+        <img className='football' src="imgs/football-team.jpg" alt="" />
+      </div> */}
     </div>
   )
 }

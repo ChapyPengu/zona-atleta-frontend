@@ -3,7 +3,6 @@ import Soccer from '../icons/Soccer'
 function ProductCategoryCard({ category, onClick = () => { } }) {
   return (
     <div className='product-category-card' onClick={onClick}>
-      <Soccer />
       <p>{category.name}</p>
     </div>
   )

@@ -29,7 +29,7 @@ class Utilities {
       'celular.jpg',
       'baseball-ball.jpg',
       'baseball-bate.jpg',
-      'basketball.jgp',
+      'basketball.jpg',
       'baseball.jpg'
     ]
     return `/imgs/${imgs[Utilities.random(imgs.length)]}`
