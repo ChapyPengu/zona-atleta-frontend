@@ -21,8 +21,11 @@
 }
 
 body {
-    background-color: var(--clouds);
-    color: var(--primary-text);
+    background: hsla(224, 47%, 52%, 1);
+    background: linear-gradient(45deg, hsla(224, 47%, 52%, 1) 0%, hsla(191, 57%, 69%, 1) 100%);
+    background: -moz-linear-gradient(45deg, hsla(224, 47%, 52%, 1) 0%, hsla(191, 57%, 69%, 1) 100%);
+    background: -webkit-linear-gradient(45deg, hsla(224, 47%, 52%, 1) 0%, hsla(191, 57%, 69%, 1) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#4A69BD", endColorstr="#82CCDD", GradientType=1);
 }
 
 * {

@@ -3,7 +3,7 @@
     max-width: 1280px;
     margin: auto;
     padding: 10rem 1rem;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 @media (width < 512px) {

@@ -2,9 +2,8 @@ import { useState, useEffect, useContext, createContext } from 'react'
 import { NoneContextProvider } from './user/NoneContext'
 import { ClientContextProvider } from './user/ClientContext'
 import { SalesManagerContextProvider } from './user/SalesManagerContext'
-import Utilities from '../utilities/Utilities'
-import Provider from '../data/provider/Provider'
 import { PROFILES } from '../config/const.js'
+import service from '../data/service.js'
 
 function UserProvider({ user, children }) {
 
@@ -56,23 +55,25 @@ export function AuthContextProvider({ children }) {
 
   async function login() {
     setLoading(true)
+    service.postLoginRequest()
     setLoading(false)
   }
 
   async function register() {
     setLoading(true)
+    service.postRegisterRequest()
     setLoading(false)
   }
 
   async function logout() {
     setLoading(true)
+    service.postLogoutRequest()
     setLoading(false)
   }
 
   async function verify() {
     setLoading(true)
-    await Utilities.sleep(1)
-    const res = Provider.getUser()
+    const res = service.postVerifyRequest()
     setUser(res)
     setAuth(true)
     setLoading(false)

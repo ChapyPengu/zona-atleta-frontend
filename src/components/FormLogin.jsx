@@ -2,19 +2,20 @@ import { useState } from 'react'
 import Validator from '../utilities/Validator'
 import { Link } from 'react-router-dom'
 import Button from './Button'
+import service from '../data/service'
 
 function FormLogin() {
 
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [submitDisabled, setSubmitDisabled] = useState(true)
 
-  function handleChangeEmail(e) {
-    setEmail(e.target.value)
+  function handleChangeUsername(e) {
+    setUsername(e.target.value)
     setError(false)
-    if (Validator.validateLogin(email, password)) {
+    if (Validator.validateLogin(username, password)) {
       setSubmitDisabled(false)
     } else {
       setSubmitDisabled(true)
@@ -24,7 +25,7 @@ function FormLogin() {
   function handleChangePassword(e) {
     setPassword(e.target.value)
     setError(false)
-    if (Validator.validateLogin(email, password)) {
+    if (Validator.validateLogin(username, password)) {
       setSubmitDisabled(false)
     } else {
       setSubmitDisabled(true)
@@ -33,18 +34,17 @@ function FormLogin() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // async function postLogin() {
-    //   try {
-    //     const response = await Service.postLoginRequest({ email, password })
-    //     console.log(response)
-    //   } catch (e) {
-    //     setError(true)
-    //     setErrorMessage('Correo electronico o contraseña incorrectos')
-    //     console.log(e)
-    //   }
-    // }
-    // postLogin()
-    alert('Iniciando Sesion')
+    async function postLogin() {
+      try {
+        const response = await service.postLoginRequest({ username, password })
+        console.log(response)
+      } catch (e) {
+        setError(true)
+        setErrorMessage('Correo electronico o contraseña incorrectos')
+        console.log(e)
+      }
+    }
+    postLogin()
   }
 
   return (
@@ -56,8 +56,8 @@ function FormLogin() {
           : <></>
       }
       <div className='form__input-container'>
-        <label htmlFor='login-email'>Correo electronico:</label>
-        <input id='login-email' value={email} onChange={handleChangeEmail} type='text' placeholder='Correo electronico' name='Correo electronico' />
+        <label htmlFor='login-username'>Correo electronico:</label>
+        <input id='login-username' value={username} onChange={handleChangeUsername} type='text' placeholder='Nombre de usuario' name='Nombre de Usuario' />
       </div>
       <div className='form__input-container'>
         <label htmlFor='login-password'>Contraseña:</label>

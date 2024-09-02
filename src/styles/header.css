@@ -1,4 +1,7 @@
-.header {}
+.header {
+    padding: 1rem .5rem;
+    overflow: hidden;
+}
 
 .header__container {
     display: flex;

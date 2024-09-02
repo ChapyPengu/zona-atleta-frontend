@@ -1,35 +1,40 @@
 import { useState, useEffect } from 'react'
-import Utilities from '../utilities/Utilities'
-import Provider from '../data/provider/Provider'
 import { useParams } from 'react-router-dom'
 import Loader from '../components/Loader'
+import service from '../data/service'
+import ErrorMessage from '../components/ErrorMessage'
 
 function ProductDetails() {
 
   const [product, setProduct] = useState({})
-  const [loanding, setLoading] = useState(false)
+  const [loanding, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
   const { id } = useParams()
 
   useEffect(() => {
-    async function getProducts() {
+    async function getProductById() {
       setLoading(true)
-      await Utilities.sleep(1)
-      setProduct(Provider.getProducts().find(p => p.id == id))
+      try {
+        const response = await service.getProductByIdRequest({ id })
+        setProduct(response)
+      } catch (e) {
+        console.log(e)
+        setError(true)
+      }
       setLoading(false)
     }
-    getProducts()
+    getProductById()
   }, [])
 
   return (
     <div className='product-details'>
       {
         loanding
-          ? <div className='home__loading-container'>
-            <Loader />
-          </div>
-          : <>
-            <p>{product.name}</p>
-          </>
+          ? <Loader />
+          : error
+            ? <ErrorMessage message='Error de servidor' />
+            : <p>{product.name}</p>
       }
     </div>
   )

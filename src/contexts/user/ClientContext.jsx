@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext } from 'react'
+import service from '../../data/service'
 
 export const ClientContext = createContext()
 
@@ -12,37 +13,37 @@ export function ClientContextProvider({ user, type: profileType, children }) {
   const [profile, setProfile] = useState('')
   const [type, setType] = useState(profileType)
 
-  function productBuy(product) {
+  async function productBuy(product) {
     alert('Comprando')
   }
 
-  function shoppingCartAddProduct(product, amount) {
+  async function shoppingCartAddProduct(product, amount) {
     setShoppingCart([...shoppingCart.push({ ...product, amount })])
   }
 
-  function shoppingCartDeleteProduct(product) {
+  async function shoppingCartDeleteProduct(product) {
     setShoppingCart(shoppingCart.filter(p => p.id !== product.id))
   }
 
-  function shoppingCartMoreAmountProduct(product) {
+  async function shoppingCartMoreAmountProduct(product) {
     shoppingCart.find(p => p.id === product.id).amount += 1
     setShoppingCart([...shoppingCart])
   }
 
-  function shoppingCartLessAmountProduct(product) {
+  async function shoppingCartLessAmountProduct(product) {
     shoppingCart.find(p => p.id === product.id).amount -= 1
     setShoppingCart([...shoppingCart])
   }
 
-  function cancelOrder(order) {
+  async function cancelOrder(order) {
 
   }
 
-  function updateOrder(order) {
+  async function updateOrder(order) {
 
   }
 
-  function shoppingCartBuy() {
+  async function shoppingCartBuy() {
     if (shoppingCart !== null) {
       alert('Comprando')
       setShoppingCart([])

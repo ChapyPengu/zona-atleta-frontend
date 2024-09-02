@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Validator from '../utilities/Validator'
 import Button from './Button'
+import service from '../data/service'
 
 function FormRegister() {
 
@@ -71,18 +72,17 @@ function FormRegister() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // async function postRegister() {
-    //   try {
-    //     const response = await Service.postRegisterRequest({ username, email, password })
-    //     console.log(response)
-    //   } catch (e) {
-    //     setError(true)
-    //     setErrorMessage('Correo electronico o contraseña incorrectos')
-    //     console.log(e)
-    //   }
-    // }
-    // postRegister()
-    alert('Creando cuenta')
+    async function postRegister() {
+      try {
+        const response = await service.postRegisterRequest({ username, email, password })
+        console.log(response)
+      } catch (e) {
+        setError(true)
+        setErrorMessage('Correo electronico o contraseña incorrectos')
+        console.log(e)
+      }
+    }
+    postRegister()
   }
 
   return (

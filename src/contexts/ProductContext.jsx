@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext, createContext } from 'react'
-import Utilities from '../utilities/Utilities'
 import Product from '../utilities/Product'
-import Provider from '../data/provider/Provider'
+import service from '../data/service'
 
 const ProductContext = createContext()
 
@@ -120,10 +119,9 @@ export function ProductContextProvider({ children }) {
 
   async function chargeProducts(index, offset) {
     setLoading(true)
-    await Utilities.sleep(1)
-    const products = Provider.getProducts(index, offset)
-    const formerProducts = Provider.getProducts(index - offset, offset)
-    const nextProducts = Provider.getProducts(index + offset, offset)
+    const products = await service.getProductsRequest(index, offset)
+    const formerProducts = await service.getProductsRequest(index - offset, offset)
+    const nextProducts = await service.getProductsRequest(index + offset, offset)
     // if (formerProducts.length === 0) {
     //   setFormer(false)
     // } else {
@@ -136,7 +134,7 @@ export function ProductContextProvider({ children }) {
     // }
     setAllProducts(products)
     setFilterProducts(products)
-    setCategories(Provider.getCategories())
+    setCategories(await service.getCategoriesRequest())
     let minPrice = null
     let maxPrice = null
     products.forEach(p => {
@@ -155,10 +153,6 @@ export function ProductContextProvider({ children }) {
     setEnd(maxPrice)
     setLoading(false)
   }
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <ProductContext.Provider value={{

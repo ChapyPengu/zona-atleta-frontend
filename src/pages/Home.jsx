@@ -11,9 +11,7 @@ import ErrorMessage from '../components/ErrorMessage'
 import Button from '../components/Button'
 import Screen from '../components/Screen'
 import ProductFilterCategory from '../components/product/ProductFilterCategory'
-import ProductCarrousel from '../components/product/ProductCarrousel'
 import Header from '../components/Header'
-import MagicButton from '../components/MagicButton'
 import CategoriesCarrousel from '../components/CategoriesCarrousel'
 
 function Home() {
