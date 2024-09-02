@@ -20,7 +20,7 @@ class Provider {
   }
 
   static getUser() {
-    return this.getNone()
+    return this.getSalesManager()
   }
   
   static getClients() {

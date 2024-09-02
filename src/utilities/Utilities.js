@@ -26,9 +26,13 @@ class Utilities {
     const imgs = [
       'pelotas.jpg',
       'labtop.jpg',
-      'celular.jpg'
+      'celular.jpg',
+      'baseball-ball.jpg',
+      'baseball-bate.jpg',
+      'basketball.jgp',
+      'baseball.jpg'
     ]
-    return `/public/${imgs[Utilities.random(imgs.length)]}`
+    return `/imgs/${imgs[Utilities.random(imgs.length)]}`
   }
 }
 

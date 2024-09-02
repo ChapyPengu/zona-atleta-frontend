@@ -1,8 +1,19 @@
-# React + Vite
+# Aplicacion cliente, Ecommerce, de Zona Atleta
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+#### Zona Atleta, tienda de articulos deportivos.
 
-Currently, two official plugins are available:
+##### Intalacion de las dependencias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+npm install
+
+##### Configuracion de variables de entornos
+
+VITE_BACKEND_URL
+
+##### Ejecutar local
+
+npm run dev
+
+##### Ejecutar en produccion
+
+npm run start
