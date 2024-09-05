@@ -1,9 +1,10 @@
 import ClipLoader from 'react-spinners/ClipLoader'
 
-function Loader() {
+function Loader({ className = '', size = 16 }) {
   return (
     <ClipLoader
-      size={64}
+      className={className}
+      size={size}
     />
   )
 }

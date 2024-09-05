@@ -1,8 +1,10 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import ShoppingCartList from '../components/shopping-cart/ShoppingCartList'
-import useUser from '../hooks/useUser'
-import ErrorMessage from '../components/ErrorMessage'
+import { useBuy } from '../contexts/BuyContext'
 import Button from '../components/Button'
+import ErrorMessage from '../components/ErrorMessage'
+import ShoppingCartList from '../components/shopping-cart/ShoppingCartList'
+import Loader from '../components/loader/Loader'
 
 function ShoppinCartVoid() {
   return (
@@ -17,16 +19,29 @@ function ShoppinCartVoid() {
   )
 }
 
-function ShoppingCartDetails({ totalPrice, onClickBuy }) {
+function ShoppingCartDetails() {
+
+  const { products, buy } = useBuy()
+
+  const total = products.reduce((acum, p) => acum + p.price, 0)
+
+  async function handleClick() {
+    console.log('Comprando')
+    try {
+      await buy()
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <div className='shopping-cart-details'>
 
       <div>
         <p className='shopping-cart-details__total-price'>Total de la Compra</p>
-        <p className='shopping-cart-details__total-price'>${totalPrice}</p>
+        <p className='shopping-cart-details__total-price'>${total}</p>
       </div>
-      <button className='shopping-cart-details__btn-buy' onClick={onClickBuy}>
+      <button className='shopping-cart-details__btn-buy' onClick={handleClick}>
         Comprar Ahora
       </button>
     </div>
@@ -35,25 +50,23 @@ function ShoppingCartDetails({ totalPrice, onClickBuy }) {
 
 function ShoppingCart() {
 
-  const clientContext = useUser()
+
+  const { loading, products, error, message } = useBuy()
 
   return (
     <div className='shopping-cart'>
       {
-        clientContext.shoppingCart.length !== 0
-          ? <>
-            <ShoppingCartList
-              products={clientContext.shoppingCart}
-              onClickLessProduct={clientContext.shoppingCartLessAmountProduct}
-              onClickMoreProduct={clientContext.shoppingCartMoreAmountProduct}
-              onClickDeleteProduct={clientContext.shoppingCartDeleteProduct}
-            />
-            <ShoppingCartDetails
-              totalPrice={clientContext.shoppingCart.reduce((acum, p) => acum + p.price, 0)}
-              onClickBuy={clientContext.shoppingCartBuy}
-            />
-          </>
-          : <ShoppinCartVoid />
+        loading
+          ? <Loader size={64} />
+          : products.length === 0
+            ? <ShoppinCartVoid />
+            : <>
+              <ShoppingCartList
+                products={products}
+              />
+              <ShoppingCartDetails
+              />
+            </>
       }
     </div>
   )

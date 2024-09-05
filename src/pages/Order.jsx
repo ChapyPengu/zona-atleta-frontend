@@ -1,40 +1,42 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useUser } from '../contexts/UserContext'
+import OrderService from '../services/OrderService'
+import ClientService from '../services/ClientService'
 import OrderList from '../components/order/OrderList'
-import useUser from '../hooks/useUser'
-import service from '../data/service'
-import { PROFILES } from '../config/const'
-import Loader from '../components/Loader'
+import PageLoader from '../components/loader/PageLoader'
 
 function Order() {
 
   const [orders, setOrders] = useState([])
-  const [loader, setLoader] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
 
-  const userContext = useUser()
+  const user = useUser()
 
   useEffect(() => {
     async function getOrders() {
-      setLoader(true)
+      setLoading(true)
       try {
-        if (userContext.type === PROFILES.CLIENT) {
-          setOrders(await service.getOrdersOfClientByIdRequest({ id: userContext.id }))
-        } else if (userContext.type === PROFILES.SALES_MANAGER) {
-          setOrders(await service.getOrdersRequest())
+        if (user.isClient()) {
+          const orders = await ClientService.getOrders(user.id)
+          setOrders(orders)
+        } else if (user.isSalesManager()) {
+          const orders = await OrderService.getOrdersRequest()
+          setOrders(orders)
         }
       } catch (e) {
         console.log(e)
         setError(true)
       }
-      setLoader(false)
+      setLoading(false)
     }
     getOrders()
-  }, [userContext])
+  }, [user])
 
-  if (loader)
+  if (loading)
     return (
       <div>
-        <Loader />
+        <PageLoader />
       </div>
     )
 
@@ -44,7 +46,7 @@ function Order() {
         <p>Error de servidor</p>
       </div>
     )
-  if (userContext.type === PROFILES.CLIENT)
+  if (user.isClient())
     return (
       <div>
         <p>Eres un cliente</p>
@@ -54,7 +56,7 @@ function Order() {
       </div>
     )
 
-  if (userContext.type === PROFILES.SALES_MANAGER)
+  if (user.isSalesManager())
     return (
       <div>
         <p>Eres un jefe de ventas</p>
@@ -66,7 +68,7 @@ function Order() {
 
   return (
     <div>
-      No eres nadie
+      Eres none
     </div>
   )
 }

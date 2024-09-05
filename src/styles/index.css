@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::view-transition-old(root)
+::view-transition-new(root) {
+    animation-duration: 5s;
+}
+
 :root {
     font-size: 16px;
     font-family: Open Sans;
@@ -18,14 +27,11 @@
     --primary-text: var(--black);
     --primary-surface: var(--white);
     --primary-surface-text: var(var(--black));
+    --body-background: var(var(--clouds))
 }
 
 body {
-    background: hsla(224, 47%, 52%, 1);
-    background: linear-gradient(45deg, hsla(224, 47%, 52%, 1) 0%, hsla(191, 57%, 69%, 1) 100%);
-    background: -moz-linear-gradient(45deg, hsla(224, 47%, 52%, 1) 0%, hsla(191, 57%, 69%, 1) 100%);
-    background: -webkit-linear-gradient(45deg, hsla(224, 47%, 52%, 1) 0%, hsla(191, 57%, 69%, 1) 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#4A69BD", endColorstr="#82CCDD", GradientType=1);
+    background-color: var(--body-background);
 }
 
 * {
@@ -35,8 +41,8 @@ body {
 }
 
 .icon {
-    width: 1rem;
-    height: 1rem;
+    width: 1.25rem;
+    height: 1.25rem;
     fill: var(--primary-text);
 }
 
@@ -81,15 +87,6 @@ body {
     font-size: 5rem;
 }
 
-/* .screen {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    background-color: rgba(0, 0, 0, .75);
-    z-index: 100;
-    padding: 0;
-} */
-
 .screen__btn-close {
     position: absolute;
     right: 2.5rem;
@@ -116,37 +113,69 @@ body {
     flex-direction: column;
     gap: 1rem;
     margin: auto;
-    padding: 1.25rem;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     background-color: var(--primary-surface);
     border-radius: .5rem;
+    padding: 3rem 1.5rem;
+    background-color: white;
 
     & .form__title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        line-height: 2.5rem;
-        text-align: center;
+        font-size: 2rem;
+    }
+
+    & .form__input-container {
+        margin: 2rem 0 1.5rem;
+        display: grid;
+        gap: 1.5rem;
+        color: #6b6b6b;
+    }
+
+    & .form__label {
+        width: 100%;
+        display: grid;
+        grid-template-areas: "input";
+    }
+
+    & .form__input {
+        font-family: inherit;
+
+        grid-area: input;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #d7d0d0;
+        padding: .7rem 1.5rem;
+        color: #6b6b6b;
+    }
+
+    & .form__select {
+        background-color: transparent;
+    }
+
+    & .form__input:focus + .form__text,
+    .form__input:not(:placeholder-shown) + .form__text{
+        height: min-content;
+        background-color: white;
+        transform: translateY(-50%) scale(.7);
+    }
+
+
+
+    & .form__text {
+        grid-area: input;
+        z-index: 90;
+        width: max-content;
+        height: 100%;
+        margin-left: 1rem;
+        padding: 0 .5rem;
+        display: flex;
+        align-items: center;
+        transform-origin: left center;
+        transition: transform .3s;
     }
 
     & .form__error-message {
         color: var(--error);
     }
-
-    & .form__input-container {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-    }
-
-    & input {
-        padding: .5rem;
-        border-radius: .375rem;
-        border: 1px solid var(--primary-text);
-    }
-
-    /* & input[type='submit'] {
-        cursor: pointer;
-    } */
 
     & .login-extra {
         display: flex;
@@ -168,6 +197,18 @@ body {
         display: flex;
         align-items: center;
         gap: 1rem;
+    }
+
+    & .form__change-im {
+        cursor: pointer;
+        font-size: .8rem;
+        text-align: center;
+        margin: 0;
+    }
+
+    & .form__change-im:hover {
+        text-decoration: underline;
+        color: var(--primary);
     }
 }
 
@@ -456,4 +497,12 @@ body {
     bottom: 0;
     z-index: 100;
     padding: 1rem;
+}
+
+.page-loader {
+    width: 100%;
+    height: 100%;
+    min-height: 10rem;
+    display: grid;
+    place-items: center;
 }

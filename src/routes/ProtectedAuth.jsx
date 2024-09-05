@@ -1,22 +1,19 @@
 import { Outlet, Navigate } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import Loader from '../components/Loader'
-import useUser from '../hooks/useUser'
-import { PROFILES } from '../config/const'
+import { useUser } from '../contexts/UserContext'
+import PageLoader from '../components/loader/PageLoader'
 
 function ProtectedAuth() {
 
-  const { auth, loading } = useAuth()
-  const { type } = useUser()
+  const user = useUser()
 
-  if (loading)
-    return <div className='home__loading-container'>
-      <Loader />
-    </div>
-    
-  if ((!auth) || (type === PROFILES.NONE))
+  if (user.isLoading())
+    return <PageLoader />
+
+  if (user.isNone()){
+    console.log('nashe')
     return <Navigate to='/login' />
-  
+  }
+
   return <Outlet />
 }
 

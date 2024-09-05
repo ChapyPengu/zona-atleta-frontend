@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import ClientService from '../services/ClientService'
 import ClientList from '../components/client/ClientList'
-import service from '../data/service'
-import Loader from '../components/Loader'
+import PageLoader from '../components/loader/PageLoader'
 import ErrorMessage from '../components/ErrorMessage'
 
 function Client() {
@@ -14,12 +14,13 @@ function Client() {
     async function getClients() {
       setLoading(true)
       try {
-        const response = await service.getClientsRequest()
+        const response = await ClientService.getAllRequest()
         setClients(response)
       } catch (e) {
         console.log(e)
         setError(true)
       }
+      setLoading(false)
     }
     getClients()
   }, [])
@@ -28,7 +29,7 @@ function Client() {
     <div>
       {
         loading
-          ? <Loader />
+          ? <PageLoader />
           : error
             ? <ErrorMessage message='Error de servidor' />
             : <ClientList clients={clients} />

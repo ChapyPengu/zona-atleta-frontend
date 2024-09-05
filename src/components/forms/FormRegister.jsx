@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import Validator from '../utilities/Validator'
-import Button from './Button'
-import service from '../data/service'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUser } from '../../contexts/UserContext'
+import Validator from '../../utilities/Validator'
+import Button from '../Button'
 
 function FormRegister() {
 
@@ -13,6 +13,9 @@ function FormRegister() {
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [submitDisabled, setSubmitDisabled] = useState(true)
+
+  const { register } = useUser()
+  const navigate = useNavigate()
 
   function handleChangeUsername(e) {
     const value = e.target.value
@@ -70,19 +73,16 @@ function FormRegister() {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    async function postRegister() {
-      try {
-        const response = await service.postRegisterRequest({ username, email, password })
-        console.log(response)
-      } catch (e) {
-        setError(true)
-        setErrorMessage('Correo electronico o contraseña incorrectos')
-        console.log(e)
-      }
+    try {
+      await register({ username, email, password })
+      navigate('/home')
+    } catch (e) {
+      setError(true)
+      setErrorMessage(e.response.data.message)
+      console.log(e)
     }
-    postRegister()
   }
 
   return (
@@ -94,20 +94,22 @@ function FormRegister() {
           : <></>
       }
       <div className='form__input-container'>
-        <label htmlFor='register-username'>Nombre de usuario:</label>
-        <input id='register-username' value={username} onChange={handleChangeUsername} type='text' placeholder='Nombre de usuario' name='Nombre de usuario' />
-      </div>
-      <div className='form__input-container'>
-        <label htmlFor='register-email'>Correo electronico:</label>
-        <input id='register-email' value={email} onChange={handleChangeEmail} type='text' placeholder='Correo electronico' name='Correo electronico' />
-      </div>
-      <div className='form__input-container'>
-        <label htmlFor='register-password'>Contraseña:</label>
-        <input id='register-password' value={password} onChange={handleChangePassword} type='password' placeholder='Contraseña' name='Contraseña' />
-      </div>
-      <div className='form__input-container'>
-        <label htmlFor='register-password-repeat'>Repetir contraseña:</label>
-        <input id='register-password-repeat' value={passwordRepeat} onChange={handleChangePasswordRepeat} type='password' placeholder='Repetir Contraseña' name='Repetir Contraseña' />
+        <label className='form__label' htmlFor='register-username'>
+          <input className='form__input' id='register-username' value={username} onChange={handleChangeUsername} type='text' placeholder=' ' />
+          <span className='form__text'>Nombre de usuario</span>
+        </label>
+        <label className='form__label' htmlFor='register-email'>
+          <input className='form__input' id='register-email' value={email} onChange={handleChangeEmail} type='text' placeholder=' ' />
+          <span className='form__text'>Correo Electronico</span>
+        </label>
+        <label className='form__label' htmlFor='register-password'>
+          <input className='form__input' id='register-password' value={password} onChange={handleChangePassword} type='password' placeholder=' ' />
+          <span className='form__text'>Contraseña</span>
+        </label>
+        <label className='form__label' htmlFor='register-password-repeat'>
+          <input className='form__input' id='register-password-repeat' value={passwordRepeat} onChange={handleChangePasswordRepeat} type='password' placeholder=' ' />
+          <span className='form__text'>Repetir Contraseña</span>
+        </label>
       </div>
       <Button type='submit' disabled={submitDisabled}>Crear Cuenta</Button>
       <p className='login-not-have-account '>

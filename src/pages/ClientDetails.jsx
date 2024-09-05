@@ -1,8 +1,7 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import service from '../data/service'
-import Loader from '../components/Loader'
+import ClientService from '../services/ClientService'
+import Loader from '../components/loader/Loader'
 import ErrorMessage from '../components/ErrorMessage'
 
 function ClientDetails() {
@@ -17,15 +16,16 @@ function ClientDetails() {
     async function getClient() {
       setLoader(true)
       try {
-        const res = service.getClientById({ id })
+        const res = await ClientService.getByIdRequest(id)
         setClient(res)
       } catch (e) {
+        console.log(e)
         setError(true)
       }
       setLoader(false)
     }
     getClient()
-  }, [])
+  }, [id])
 
   return (
     <div className='client-details'>

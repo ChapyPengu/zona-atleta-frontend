@@ -27,7 +27,7 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
       </div>
       <div className='shopping-cart-card__content'>
         <p className='shopping-cart-card__name'>{product.name}</p>
-        <p className='shopping-cart-card__category'>Categoria: {product.category}</p>
+        <p className='shopping-cart-card__category'>Categoria: {product.category.name}</p>
         <p className='shopping-cart-card__stock'>Unidades disponibles: {product.stock}</p>
         <p className='shopping-cart-card__price'>Precio: ${product.price}</p>
         <p className='shopping-cart-card__amount'>Unidades actuales: {product.amount}</p>

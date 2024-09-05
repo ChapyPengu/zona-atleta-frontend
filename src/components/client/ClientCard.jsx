@@ -1,7 +1,12 @@
+import Link from '../Link'
+
 function ClientCard({ client }) {
   return (
-    <div>
-      {client.username}
+    <div className='client-card'>
+      <p className='name'>Nombre de usuario: {client.username}</p>
+      <p>Correo electronico: {client.email}</p>
+      <p>Perfil: {client.profile.name}</p>
+      <Link to={`/client/${client.id}/orders`}>Ver pedidos</Link>
     </div>
   )
 }

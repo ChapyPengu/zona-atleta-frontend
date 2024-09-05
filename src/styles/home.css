@@ -1,17 +1,6 @@
-.home__loading-container {
-    display: grid;
-    place-items: center;
-    padding: 5rem 0;
-}
-
 .home {
     display: flex;
     flex-direction: column;
-    gap: 12.5rem;
+    gap: 7.5rem;
 }
 
-.home__products {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-}

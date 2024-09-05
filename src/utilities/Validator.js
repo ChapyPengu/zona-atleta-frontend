@@ -1,7 +1,7 @@
 class Validator {
 
   static validateUsername(username) {
-    return username.length > 4
+    return username.length >= 4
   }
 
   static validateEmail(email) {
@@ -9,7 +9,7 @@ class Validator {
   }
 
   static validatePasswordForLogin(password) {
-    return password.length > 8
+    return password.length >= 5
   }
 
   static validatePasswordForRegister(password) {
@@ -19,11 +19,11 @@ class Validator {
         counterNumbers++
       }
     }
-    return password.length > 8 && counterNumbers > 0
+    return password.length >= 5 && counterNumbers > 0
   }
 
-  static validateLogin(email, password) {
-    return this.validateEmail(email) && this.validatePasswordForLogin(password)
+  static validateLogin(username, password) {
+    return this.validateUsername(username) && this.validatePasswordForLogin(password)
   }
 
   static validateRegister(username, email, password, passwordRepeat) {

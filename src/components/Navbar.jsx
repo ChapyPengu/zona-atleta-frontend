@@ -1,20 +1,32 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import useUser from '../hooks/useUser'
-import Notification from './user/Notification'
-import ProductFilterName from './product/ProductFilterName'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUser } from '../contexts/UserContext'
 import Logo from './Logo'
+import ProductFilterName from './product/ProductFilterName'
 import User from './icons/User'
 import ShoppingCart from './icons/ShoppingCart'
 import Bars from './icons/Bars'
 import Xmark from './icons/Xmark'
 import ArrowLeft from './icons/ArrowLeft'
-import { PROFILES } from '../config/const'
 import OrderClient from './icons/OrderClient'
 import OrderSalesManager from './icons/OrderSalesManager'
 import Users from './icons/Users'
+import Like from './icons/Like'
+import Bell from './icons/Bell'
+import ClientService from '../services/ClientService'
 
-const NONE_LINKS = []
+const NONE_LINKS = [
+  {
+    name: 'Favoritos',
+    to: '/favorites',
+    icon: <Like />
+  },
+  {
+    name: 'Carrito de Compras',
+    to: '/shopping-cart',
+    icon: <ShoppingCart />
+  }
+]
 
 const CLIENT_LINKS = [
   {
@@ -75,7 +87,27 @@ const SALES_MANAGER_OPTIONS = [
   }
 ]
 
-function NavbarBase({ userOptions, links, inputValue, inputOnChange }) {
+function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
+
+  const [notifications, setNotifications] = useState([])
+
+  const navigate = useNavigate()
+
+  const user = useUser()
+
+  useEffect(() => {
+    async function getNotifications() {
+      if (user.isClient()) {
+        try {
+          const data = await ClientService.getNotifications(user.id)
+          console.log(data)
+        } catch (e) {
+          console.log(e)
+        }
+      }
+    }
+  }, [])
+
   return (
     <div className='navbar-content'>
       <Logo />
@@ -87,7 +119,31 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange }) {
           </button>
           <div className='navbar-content__menu'>
             {
-              userOptions.map((item, i) => <Link key={i} className='link navbar-content__menu-item' to={item.to}>{item.name}</Link>)
+              userOptions.map((item, i) => {
+                if (item.to === '/logout') {
+                  return <p key={i} className='link navbar-content__menu-item' onClick={async () => {
+                    try {
+                      await logout()
+                      navigate('/home')
+                    } catch (e) {
+                      console.log(e)
+                    }
+                  }}>{item.name}</p>
+                } else {
+                  return <Link key={i} className='link navbar-content__menu-item' to={item.to}>{item.name}</Link>
+                }
+              })
+            }
+          </div>
+        </div>
+        <div className='navbar-content__icon'>
+          <button className='navbar-content-btn-icon navbar-account notification'>
+            <Bell className='navbar-content-icon' />
+            <p className='notification-number'>1</p>
+          </button>
+          <div className='navbar-content__menu navbar-content__menu-2'>
+            {
+              notifications.map((n, i) => <p key={i} className='link navbar-content__menu-item'>{n.message}</p>)
             }
           </div>
         </div>
@@ -133,7 +189,7 @@ function NavbarResponsive({ userOptions, links, inputValue, inputOnChange, searc
               <p className='link navbar-responsive__item' onClick={() => setSearch(!search)}>Buscar</p>
               <p className='link navbar-responsive__item' onClick={() => setSearch(!search)}>Usuario</p>
               {
-                links.map((item, i) => <Link to={item.to} className='link navbar-responsive__item'>{item.name}</Link>)
+                links.map((item, i) => <Link key={i} to={item.to} className='link navbar-responsive__item'>{item.name}</Link>)
               }
             </div>
             : <></>
@@ -142,12 +198,12 @@ function NavbarResponsive({ userOptions, links, inputValue, inputOnChange, searc
   )
 }
 
-function NavbarComponent({ userOptions, links, inputValue, inputOnChange, menu, setMenu, search, setSearch }) {
+function NavbarComponent({ userOptions, links, inputValue, inputOnChange, menu, setMenu, search, setSearch, logout }) {
 
   return (
     <div className='navbar'>
       <div className='navbar-container'>
-        <NavbarBase userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} />
+        <NavbarBase userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} />
         <NavbarResponsive userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
       </div>
     </div>
@@ -159,7 +215,17 @@ function Navbar({ active, inputValue, inputOnChange }) {
   const [menu, setMenu] = useState(false)
   const [search, setSearch] = useState(false)
 
-  const { type } = useUser()
+  const user = useUser()
+
+  const props = {
+    inputValue,
+    inputOnChange,
+    menu,
+    setMenu,
+    search,
+    setSearch,
+    logout: user.logout
+  }
 
   useEffect(() => {
     setSearch(false)
@@ -181,13 +247,25 @@ function Navbar({ active, inputValue, inputOnChange }) {
       </div>
     )
 
-  if (type === PROFILES.SALES_MANAGER)
-    return <NavbarComponent userOptions={SALES_MANAGER_OPTIONS} links={SALES_MANAGER_LINKS} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
+  if (user.isClient())
+    return <NavbarComponent
+      userOptions={CLIENT_OPTIONS}
+      links={CLIENT_LINKS}
+      {...props}
+    />
 
-  if (type === PROFILES.CLIENT)
-    return <NavbarComponent userOptions={CLIENT_OPTIONS} links={CLIENT_LINKS} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
+  if (user.isSalesManager())
+    return <NavbarComponent
+      userOptions={SALES_MANAGER_OPTIONS}
+      links={SALES_MANAGER_LINKS}
+      {...props}
+    />
 
-  return <NavbarComponent userOptions={NONE_OPTIONS} links={NONE_LINKS} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
+  return <NavbarComponent
+    userOptions={NONE_OPTIONS}
+    links={NONE_LINKS}
+    {...props}
+  />
 
 }
 

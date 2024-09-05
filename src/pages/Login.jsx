@@ -1,15 +1,10 @@
-import FormLogin from '../components/FormLogin'
-import { useEffect } from 'react'
+import FormLogin from '../components/forms/FormLogin'
 
 function Login() {
-
-  useEffect(() => {
-  }, [])
-
   return (
     <>
       <FormLogin />
-    </> 
+    </>
   )
 }
 

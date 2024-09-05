@@ -3,7 +3,7 @@ class Utilities {
   static async sleep(seconds) {
     return new Promise((resolve, reject) => {
       try {
-        setTimeout(resolve, seconds * 1000)
+        setTimeout(resolve, seconds * 1000 * 0)
       } catch (e) {
         reject(e)
       }

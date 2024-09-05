@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
-import useUser from '../hooks/useUser'
-import { PROFILES } from '../config/const'
+import { useState, useEffect } from 'react'
+import { useUser } from '../contexts/UserContext'
+import ClientService from '../services/ClientService'
 
 function ProfileClient({ user }) {
   return (
@@ -22,17 +22,21 @@ function ProfileSalesManager({ user }) {
 
 function Profile() {
 
-  const userContext = useUser()
+  const [data, setData] = useState({})
+
+  const user = useUser()
 
   useEffect(() => {
-    
+    setData({})
   }, [])
 
-  if (userContext.type === PROFILES.SALES_MANAGER)
-    return <ProfileSalesManager user={userContext}/>
+  if (user.isClient())
+    return <ProfileClient user={data} />
+
+  if (user.isSalesManager())
+    return <ProfileSalesManager user={data} />
 
 
-  return <ProfileClient user={userContext}/>
 }
 
 export default Profile

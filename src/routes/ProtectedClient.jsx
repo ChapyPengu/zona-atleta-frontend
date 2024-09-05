@@ -1,18 +1,21 @@
 import { Outlet, Navigate } from 'react-router-dom'
-import useUser from '../hooks/useUser'
-import { PROFILES } from '../config/const'
+import { useUser } from '../contexts/UserContext'
+import PageLoader from '../components/loader/PageLoader'
 
 function ProtectedClient() {
 
-  const userContext = useUser()
+  const user = useUser()
 
-  if (userContext.type === PROFILES.CLIENT)
-    return <Outlet />
+  if (user.isLoading())
+    return <PageLoader />
 
-  if (userContext.type === PROFILES.NONE)
+  if (user.isNone())
     return <Navigate to='/login' />
 
-  return <Navigate to='/home' />
+  if (user.isSalesManager())
+    return <Navigate to='/home' />
+
+  return <Outlet />
 }
 
 export default ProtectedClient

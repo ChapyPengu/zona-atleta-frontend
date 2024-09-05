@@ -11,7 +11,7 @@
     display: block;
     max-width: 1280px;
     margin: auto;
-    padding: .5rem 1rem;
+    padding: 1rem;
 }
 
 .navbar-content {
@@ -124,8 +124,23 @@
     display: block;
 }
 
+.navbar-content__icons .navbar-content__icon:hover .navbar-content__menu-2 {
+    display: none;
+}
+
 .navbar-content__icons .navbar-account:focus ~ .navbar-content__menu {
     display: block;
+}
+
+.navbar-content__menu-2 {
+    width: 200px;
+    border: 1px solid #00000044;
+    transform: translate(-4rem, 2.5rem);
+
+    & .navbar-content__menu-item {
+        font-size: 1rem;
+        padding: 1rem;
+    }
 }
 
 .notification {
@@ -137,12 +152,12 @@
     }
 
     & .notification-number {
-        width: .75rem;
-        height: .75rem;
+        width: 1rem;
+        height: 1rem;
         position: absolute;
-        top: -.5rem;
-        right: -.5rem;
-        background-color: red;
+        top: -.1rem;
+        right: -.1rem;
+        background-color: crimson;
         border-radius: 50%;
         padding: .15rem;
         font-size: .5rem;

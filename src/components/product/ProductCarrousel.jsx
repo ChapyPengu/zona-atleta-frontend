@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import ArrowLeft from '../icons/ArrowLeft'
 import ArrowRight from '../icons/ArrowRight'
 
-function ProductCarrousel() {
+function ProductCarrousel({ hiddenBtns = false }) {
 
   const right = 1
   const left = -1
@@ -57,13 +57,21 @@ function ProductCarrousel() {
 
   return (
     <div className='product-carrousel'>
-      <button className='left' onClick={previous}>
-        <ArrowLeft />
-      </button>
+      {
+        hiddenBtns
+          ? <></>
+          : <button className='left' onClick={previous}>
+            <ArrowLeft />
+          </button>
+      }
       <img src={`imgs/${images[index]}`} alt='Chapy Pengu' className={`${loader ? 'loader' : ''} ${direccion === right ? 'loader-right' : 'loader-left'}`} onLoad={() => setLoader(true)} />
-      <button className='right' onClick={next}>
-        <ArrowRight />
-      </button>
+      {
+        hiddenBtns
+          ? <></>
+          : <button className='right' onClick={next}>
+            <ArrowRight />
+          </button>
+      }
     </div>
   )
 }
