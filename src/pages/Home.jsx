@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Navigate } from 'react-router-dom'
+import { useParams, useNavigate, Navigate, Link } from 'react-router-dom'
 import ProductService from '../services/ProductService'
 import CategoryService from '../services/CategoryService'
 import ClientService from '../services/ClientService'
@@ -11,6 +11,7 @@ import ProductsSection from '../components/home/ProductsSection'
 import DiscountSection from '../components/home/DiscountSection'
 import LatestAdditions from '../components/home/LatestAdditions'
 import PopularProductsSection from '../components/home/PopularProductsSection'
+import Button from '../components/Button'
 
 function Home({ name }) {
 
@@ -156,12 +157,15 @@ function Home({ name }) {
 
   return (
     <div className='home'>
-      <Header images={images}/>
-      <DiscountSection discounts={discount}/>
-      <CategoriesSection categories={categories}/>
-      <LatestAdditions last={last}/>
-      <ProductsSection products={products}/>
-      <PopularProductsSection popular={popular}/>
+      <Header images={images} />
+      <Link to='/create-product'>
+        <Button>Crear productos</Button>
+      </Link>
+      <DiscountSection discounts={discount} />
+      <CategoriesSection categories={categories} />
+      <LatestAdditions last={last} />
+      <ProductsSection products={products} />
+      <PopularProductsSection popular={popular} />
       {/* <div>
         <CategoriesCarrousel categories={categories} />
       </div> */}
