@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
-const socket = io(BACKEND_URL)
+// const socket = io(BACKEND_URL)
 
 const AppContext = createContext()
 
@@ -17,14 +17,14 @@ export function useApp() {
 export function AppContextProvider({ children }) {
 
   useEffect(() => {
-    socket.on('notification', notification => {
-      console.log(notification)
-    })
+    // socket.on('notification', notification => {
+      // console.log(notification)
+    // })
   }, [])
 
   return (
     <AppContext.Provider value={{
-      socket
+      // socket
     }}>
       {children}
     </AppContext.Provider>

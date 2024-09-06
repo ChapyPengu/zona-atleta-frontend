@@ -169,7 +169,8 @@ function Home({ name }) {
       <Header />
       <div className='max-w-[1536px] mx-auto flex flex-col gap-32'>
         <SectionCarrousel title='Descuentos' products={products} amount={4} />
-        <CategoriesSection title='Categorias' categories={categories} />
+        {/* <SectionCarrousel title='Descuentos' products={products} amount={6} /> */}
+        {/* <CategoriesSection title='Categorias' categories={categories} /> */}
         <div className='flex justify-center'>
           <button className='text-2xl font-bold text-white bg-primary px-12 py-4 hover:brightness-90 transition-all  rounded-full'>Comprar</button>
         </div>
