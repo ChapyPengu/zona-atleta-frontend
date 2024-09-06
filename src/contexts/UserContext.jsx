@@ -76,14 +76,14 @@ export function UserContextProvider({ children }) {
   async function verify() {
     setLoading(true)
     const cookies = Cookies.get()
-    console.log(cookies)
+    console.log('cookies', cookies)
     if (!cookies.token) return setLoading(false)
     try {
       const res = await AuthService.postVerifyRequest()
       setId(res.id)
       setProfile(res.profile)
       socket.emit('auth', res)
-      console.log(res)
+      console.log('verify devuelve', res)
     } catch (e) {
       console.log(e)
     }
