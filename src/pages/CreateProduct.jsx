@@ -56,7 +56,7 @@ function CreateProduct() {
   }, [])
 
   return (
-    <div className='grid grid-cols-2 max-w-[1280px] mx-auto py-32 bg-red-200'>
+    <div className='grid grid-cols-2 max-w-[1280px] mx-auto py-32'>
       <div>
         <FormProduct products={products} setProducts={setProducts} />
       </div>

@@ -1,5 +1,5 @@
 import Carousel from 'react-multi-carousel'
-import { API_URL } from '../../config/config'
+// import { API_URL } from '../../config/config'
 
 const responsive = {
   superLargeDesktop: {
@@ -19,6 +19,8 @@ const responsive = {
     items: 1
   }
 }
+
+const API_URL = 'https://zona-atleta-backend-production.up.railway.app'
 
 function SectionCarrousel({ title, loading, products, amount = 5 }) {
 
@@ -52,7 +54,7 @@ function SectionCarrousel({ title, loading, products, amount = 5 }) {
             if (loading) {
               return <div key={i} className='min-w-32 min-h-32 bg-primary rounded-sm'></div>
             }
-            return <img key={i} className='' src={`${p.image}`} alt={p.name} />
+            return <img key={i} className='' src={`${API_URL}${p.image}`} alt={p.name} />
           })
         }
       </Carousel>
