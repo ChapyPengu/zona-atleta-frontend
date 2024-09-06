@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useBuy } from '../../contexts/BuyContext'
-import Button from '../Button'
-import ShoppingCart from '../icons/ShoppingCart'
-import Utilities from '../../utilities/Utilities'
-// import Loader from '../loader/Loader'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useBuy } from '../contexts/BuyContext'
+import { useUser } from '../contexts/UserContext'
+import ProductService from '../services/ProductService'
+import ShoppingCart from '../components/icons/ShoppingCart'
+import Button from '../components/Button'
+import Utilities from '../utilities/Utilities'
 import Loader from 'react-spinners/ClipLoader'
-import { useUser } from '../../contexts/UserContext'
-import Previus from '../icons/ArrowLeft'
-import Next from '../icons/ArrowRight'
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -74,7 +74,7 @@ function ProductCard({ product }) {
         <p className='product-card__more-see'>Ver mas</p>
         {
           product.image !== null
-            ? <img className='product-card__image' src={`${product.image}`} alt={product.name} />
+            ? <img className='product-card__image' src={`${BACKEND_URL}/${product.image}`} alt={product.name} />
             : <img className='product-card__image' src={Utilities.randomImg()} alt={product.name} />
         }
       </div>
@@ -124,47 +124,38 @@ function ProductList({ products }) {
   )
 }
 
-function ProductsSection({ title, loading, products, page, navigate }) {
+function ProductByName() {
+
+  const [products, setProducts] = useState([])
+
+  const { name } = useParams()
+
+  useEffect(() => {
+    async function getProductns() {
+      try {
+        const data = await ProductService.getProductsByName(name)
+        setProducts(data)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    getProductns()
+  }, [])
+  
   return (
-    <div id=''>
-      {/* <h4 className='text-4xl font-semibold my-8'>{title}</h4> */}
-
-      <div className='flex justify-between items-center'>
-        <h1 className="pl-8 my-12 text-3xl uppercase font-black bg-gradient-to-r from-primary  to-[#ff9f1a] inline-block text-transparent bg-clip-text">{title}</h1>
-
-        <div className='flex gap-4'>
-          <Button onClick={() => {
-            if (page === undefined) {
-              navigate(`/home/page/${2}`)
-            } else {
-              if (parseInt(page) >= 2) {
-                navigate(`/home/page/${parseInt(page) - 1}`)
-              }
-            }
-          }}>
-            <Previus className='fill-white' />
-          </Button>
-          {
-            page !== undefined
-              ? <Button>
-                {page}
-              </Button>
-              : <></>
-          }
-          <Button onClick={() => {
-            if (page === undefined) {
-              navigate(`/home/page/${2}`)
-            } else {
-              navigate(`/home/page/${parseInt(page) + 1}`)
-            }
-          }}>
-            <Next className='fill-white' />
-          </Button>
-        </div>
+    <div className='max-w-[1536px] mx-auto py-32'>
+      <div>
+        <p className='text-primary text-4xl font-bold pl-8 uppercase my-8'>resultados para {name}</p>
       </div>
-      <ProductList products={products} />
+      <div>
+        {
+          products.length === 0
+            ? <p>No se encontraron productos</p>
+            : <ProductList products={products} />
+        }
+      </div>
     </div>
   )
 }
 
-export default ProductsSection
+export default ProductByName

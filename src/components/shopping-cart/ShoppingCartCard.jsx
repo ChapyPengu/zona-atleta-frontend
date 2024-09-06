@@ -36,7 +36,7 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
   async function handleClickEditMinus() {
     setLoadingEdit(true)
     await editProduct(product, { amount: product.amount - 1 })
-    products.find(p => parseInt(p.id) !== parseInt(product.id)).amount -= 1
+    products.find(p => parseInt(p.id) === parseInt(product.id)).amount -= 1
     setProducts([...products])
     setLoadingEdit(false)
   }
@@ -44,9 +44,7 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
   async function handleClickEditAdd() {
     setLoadingEdit(true)
     await editProduct(product, { amount: product.amount + 1 })
-    const p = products.find(p => parseInt(p.id) !== parseInt(product.id))
-    p.amount += 1
-    console.log(products)
+    products.find(p => parseInt(p.id) === parseInt(product.id)).amount += 1
     setProducts([...products])
     setLoadingEdit(false)
   }
@@ -54,23 +52,23 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
   async function handleClickDelete() {
     setLoadingDelete(true)
     await deleteProduct(product)
-    setProducts(products.filter(p => parseInt(p.id) !== parseInt(product.id)))
+    setProducts(products.filter(p => parseInt(p.id) === parseInt(product.id)))
     setLoadingDelete(false)
   }
 
   return (
-    <div className='flex gap-8'>
+    <div className='w-full flex gap-8'>
       <div className='flex flex-col gap-4'>
         <div className='grid place-items-center'>
           {
             product.image === null
-              ? <img className='w-64' src={Utilities.randomImg()} alt={product.name} />
-              : <img className='w-64' src={`${API_URL}/${product.image}`}></img>
+              ? <img className='w-48 h-48 bg-primary' src={Utilities.randomImg()} alt={product.name} />
+              : <img className='w-48 h-48 bg-primary' src={`${API_URL}/${product.image}`}></img>
           }
         </div>
 
       </div>
-      <div className='flex flex-col gap-4'>
+      <div className='w-full flex flex-col gap-8'>
         <div className='flex flex-col gap-1'>
           <p className='text-xl'>{product.name}</p>
           <p className='font-medium'>Precio por unidad: ${formatearNumeroConPuntos(product.price)}</p>
@@ -78,7 +76,7 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
           {/* <p className=''>Disponibles: {product.stock}</p> */}
           <p className='text-lg font-bold'>Total: ${formatearNumeroConPuntos(totalPrice)}</p>
         </div>
-        <div className='flex justify-center gap-8'>
+        <div className='flex justify-center gap-4 w-full'>
           {
             edit
               ? (

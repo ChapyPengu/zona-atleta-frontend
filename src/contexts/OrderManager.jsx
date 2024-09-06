@@ -113,12 +113,9 @@ export function OrderManagerContextProvider({ children }) {
         if (user.isClient()) {
           const res = await ClientService.getOrders(user.id)
           setOrders(res)
-        console.log(res)
-
         } else if (user.isSalesManager()) {
           const res = await OrderService.getOrdersRequest()
           setOrders(res)
-        console.log(res)
         }
       } catch (e) {
         console.log(e)

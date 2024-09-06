@@ -2,6 +2,11 @@ import { useState, useContext, createContext, useEffect } from 'react'
 import { useUser } from './UserContext'
 import ClientService from '../services/ClientService'
 
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const MySwal = withReactContent(Swal)
+
 const BuyContext = createContext()
 
 export function useBuy() {
@@ -43,23 +48,38 @@ export function BuyContextProvider({ children }) {
 
   async function buyOne(product) {
     if (!user.isClient()) return
+    MySwal.fire({
+      title: <p>Creando pedido...</p>,
+      showCloseButton: false,
+      showConfirmButton: false
+    })
     const data = await ClientService.postOrderByOneProduct(user.id, product.id, {
       paymentMethod: 'Mercado Pago',
       address: 'Balbin 3219',
       amount: 1
     })
-    console.log(data)
+    MySwal.close()
+    setTimeout(() => {
+      window.location.href = data.redirectUrl
+    }, 500)
   }
 
 
   async function buy() {
     if (!user.isClient()) return
+    MySwal.fire({
+      title: <p>Creando pedido...</p>,
+      showCloseButton: false,
+      showConfirmButton: false
+    })
     const data = await ClientService.postOrderByManyProduct(user.id, {
       paymentMethod: 'Mercado Pago',
       address: 'Balbin 3219',
       amount: 1
     })
-    console.log(data)
+    setTimeout(() => {
+      window.location.href = data.redirectUrl
+    }, 500)
   }
 
   function haveProduct(product) {

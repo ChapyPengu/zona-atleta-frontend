@@ -31,7 +31,7 @@ function Footer() {
           </nav>
           <article className='footer__contact'>
             <h4 className='footer__copy'>Contact us:</h4>
-            <p className='footer__info'>Email: chaparro.lautaro@gmail.com</p>
+            <p className='footer__info'>Email: zona-atleta@gmail.com</p>
             <p className='footer__info'>Telefono: 554-433-2211</p>
             <p className='footer__info'>Ricardo Balbin 3462, Buenos Aires.</p>
           </article>

@@ -20,7 +20,9 @@ import './styles/home.css'
 import './styles/profile.css'
 import './styles/layout.css'
 import './styles/shopping-cart.css'
+
 import 'react-multi-carousel/lib/styles.css';
+import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css';
 
 createRoot(document.getElementById('root')).render(

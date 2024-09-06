@@ -7,6 +7,9 @@ import ErrorMessage from '../components/ErrorMessage'
 import { useUser } from '../contexts/UserContext'
 import { API_URL } from '../config/config'
 import Button from '../components/Button'
+import Like from '../components/icons/Like'
+import ClientService from '../services/ClientService'
+import { toast } from 'react-toastify'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -75,6 +78,7 @@ function ProductDetailsLayout({ product }) {
 
   const [comments, setComments] = useState([...product.comments])
   const [comment, setComment] = useState('')
+  const [loadingFavorites, setLoadingFavorites] = useState(false)
 
   const user = useUser()
 
@@ -98,6 +102,26 @@ function ProductDetailsLayout({ product }) {
     }
   }
 
+  async function addFavorites() {
+    setLoadingFavorites(true)
+    try {
+      const data = await ClientService.postFavorite(user.id, product.id)
+      toast('Se agrego a favoritos', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light"
+      });
+    } catch (e) {
+      console.log(e)
+    }
+    setLoadingFavorites(false)
+  }
+
   return (
     <div className='flex justify-center items-center flex-col py-16 gap-8'>
       <div>
@@ -106,16 +130,44 @@ function ProductDetailsLayout({ product }) {
       <div>
         <p className='product-details__description'>{product.description}</p>
       </div>
-      <div className=''>
+      <div className='flex justify-start items-start gap-8'>
         <img className='product-details__img' src={`${API_URL}${product.image}`} />
+        <div className='flex flex-col justify-start items-start gap-6'>
+          <p className='text-4xl font-semibold'>${product.price}</p>
+          <div>
+            <p className='text-xl font-normal'>Unidades disponibles: {product.stock}</p>
+            {/* <p className='text-4xl font-semibold'>${product.price}</p> */}
+          </div>
+          <div className='flex gap-4'>
+            <Button className=''>
+              Comprar
+            </Button>
+            <Button variant='outline'>
+              Agregar al Carrito
+            </Button>
+          </div>
+          {
+            user.isClient()
+              ? <Button onClick={addFavorites} className='flex justify-center items-center gap-4'>
+                {
+                  loadingFavorites
+                    ? <Loader color='white' />
+                    : <>
+                      Agregar a favoritos
+                      <Like />
+                    </>
+                }
+              </Button>
+              : <></>
+          }
+
+        </div>
       </div>
-      <div className='flex gap-8'>
-        <Button>
-          Comprar
-        </Button>
-        <Button>
-          Agregar al Carrito
-        </Button>
+      {/* <div className='flex gap-8'> */}
+
+      {/* </div> */}
+      <div className='bg-primary w-[1024px] h-[2px] rounded-full'>
+
       </div>
       <div className='flex flex-col gap-8'>
         <h4 className='text-center text-2xl'>Comentarios</h4>

@@ -43,6 +43,21 @@ class ProductService {
     })
     return response.data
   }
+
+  static async getProductsByCategory(name) {
+    const response = await axios.get(`/api/product/category/${name}`)
+    return response.data
+  }
+
+  static async getProductsByName(name) {
+    const response = await axios.get(`/api/product/name/${name}`)
+    return response.data
+  }
+
+  static async getProductsByPage(offset, limit) {
+    const response = await axios.get(`/api/product/page/${offset}/${limit}`)
+    return response.data
+  }
 }
 
 export default ProductService

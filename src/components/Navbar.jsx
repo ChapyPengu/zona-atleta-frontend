@@ -36,6 +36,11 @@ const CLIENT_LINKS = [
     icon: <OrderClient />
   },
   {
+    name: 'Favoritos',
+    to: '/favorites',
+    icon: <Like />
+  },
+  {
     name: 'Carrito de Compras',
     to: '/shopping-cart',
     icon: <ShoppingCart />
@@ -88,7 +93,7 @@ const SALES_MANAGER_OPTIONS = [
   }
 ]
 
-function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
+function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout, search, setSearch }) {
 
   const [notifications, setNotifications] = useState([])
 
@@ -115,18 +120,24 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
         {/* <Bars className='bars-icon-navbar' /> */}
         <Logo />
       </div>
-      <div className='flex gap-4 font-bold'>
-        <p className='capitalize hover:underline cursor-pointer'>categorias</p>
-        <p className='capitalize hover:underline cursor-pointer'>mujer</p>
-        <p className='capitalize hover:underline cursor-pointer'>hombre</p>
-        <p className='capitalize hover:underline cursor-pointer'>kid</p>
-        <p className='capitalize hover:underline cursor-pointer'>categorias</p>
-        <p className='capitalize hover:underline cursor-pointer'>marcas</p>
-        <p className='capitalize hover:underline cursor-pointer'>zapatillas</p>
-      </div>
-      {/* <ProductFilterName value={inputValue} onChange={inputOnChange} /> */}
+      {
+        search
+          ? <ProductFilterName value={inputValue} onChange={inputOnChange} />
+          : <div className='flex gap-4 font-bold'>
+            <p className='capitalize hover:underline cursor-pointer'>categorias</p>
+            <p className='capitalize hover:underline cursor-pointer'>mujer</p>
+            <p className='capitalize hover:underline cursor-pointer'>hombre</p>
+            <p className='capitalize hover:underline cursor-pointer'>kid</p>
+            <p className='capitalize hover:underline cursor-pointer'>categorias</p>
+            <p className='capitalize hover:underline cursor-pointer'>marcas</p>
+            <p className='capitalize hover:underline cursor-pointer'>zapatillas</p>
+          </div>
+      }
       <div className='navbar-content__icons'>
-        <p className='link navbar-content-btn-icon'>
+        <p className='link navbar-content-btn-icon' onClick={() => {
+          // navigate(`/product/name/${inputValue}`)
+          setSearch(!search)
+        }}>
           <Search />
         </p>
         <div className='navbar-content__icon'>
@@ -169,7 +180,7 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
           links.map((item, i) => {
             if (item.name === 'Carrito de Compras') {
               return <Link to={item.to} key={i} onClick={e => e.stopPropagation()}>
-                <button  onClick={(e) => e.stopPropagation()} className='navbar-content-btn-icon navbar-account notification'>
+                <button onClick={(e) => e.stopPropagation()} className='navbar-content-btn-icon navbar-account notification'>
                   <ShoppingCart className='navbar-content-icon' />
                   {
                     user.notifications !== 0
@@ -235,7 +246,7 @@ function NavbarComponent({ userOptions, links, inputValue, inputOnChange, menu, 
   return (
     <div className='navbar bg-primary'>
       <div className='navbar-container'>
-        <NavbarBase userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} />
+        <NavbarBase userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} search={search} setSearch={setSearch} />
         <NavbarResponsive userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
       </div>
     </div>

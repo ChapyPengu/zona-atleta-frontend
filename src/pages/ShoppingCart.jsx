@@ -35,14 +35,16 @@ function ShoppingCartDetails() {
   }
 
   return (
-    <div className='col-start-3 col-end-4 bg-blue-200 py-8 text-center'>
-      <div className='text-center'>
-        <p className='text-2xl mb-2'>Total de la Compra</p>
-        <p className='text-2xl font-bold'>${total}</p>
+    <div className='py-8 text-center flex justify-center items-start'>
+      <div className='pb-8 border-b-2 border-primary w-max'>
+        <div className='text-center'>
+          <p className='text-2xl mb-2'>Total de la Compra</p>
+          <p className='text-2xl font-bold'>${total}</p>
+        </div>
+        <button className='bg-primary text-white px-4 py-2 rounded-md text-xl font-semibold mt-4' onClick={handleClick}>
+          Comprar Ahora
+        </button>
       </div>
-      <button className='bg-primary text-white px-4 py-2 rounded-md text-xl font-semibold mt-4' onClick={handleClick}>
-        Comprar Ahora
-      </button>
     </div>
   )
 }
@@ -59,7 +61,7 @@ function ShoppingCart() {
           ? <Loader size={64} />
           : products.length === 0
             ? <ShoppinCartVoid />
-            : <div className='grid grid-cols-3 items-start'>
+            : <div className='grid grid-cols-2  justify-center mx-auto gap-8'>
               <ShoppingCartList
                 products={products}
               />

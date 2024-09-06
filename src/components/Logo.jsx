@@ -45,8 +45,8 @@ function Logo({ className = '', animation = true }) {
   }, [])
 
   return (
-    <Link className={`link logo ${className}`} to='/home'>
-      Logo
+    <Link className={`link logo uppercase ${className}`} to='/home'>
+      Zona Atleta
       {
         animation
           ? <div className='logo-icon__container'>

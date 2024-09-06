@@ -21,7 +21,10 @@ import Chatbot from './components/Chatbot'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
 import ClientOrders from './pages/ClientOrders'
-
+import Favorites from './pages/Favorites'
+import { ToastContainer } from 'react-toastify';
+import ProductByCategory from './pages/ProductByCategory'
+import ProductByName from './pages/ProductByName'
 
 function App() {
 
@@ -68,11 +71,28 @@ function App() {
     <>
       <Navbar active={navbarActive} inputValue={name} inputOnChange={(e) => setName(e.target.value)} />
       <Chatbot />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{
+          zIndex: '1300'
+        }} />
+      <ToastContainer />
       <Layout>
         <Routes>
           <Route path='/' element={<Navigate to='/home' />} />
-          <Route path='/home' element={<Home name={name} />} />
-          <Route path='/home/page/:page' element={<Home name={name} />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='/home/page/:page' element={<Home />} />
+          <Route path='/category/:name' element={<ProductByCategory />} />
+          <Route path='/name/:name' element={<ProductByName />} />
           <Route element={<ProtectedNotAuth />}>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
@@ -84,6 +104,7 @@ function App() {
             <Route path='/order/:id' element={<OrderDetails />} />
             <Route element={<ProtectedClient />}>
               <Route path='/shopping-cart' element={<ShoppingCart />} />
+              <Route path='/favorites' element={<Favorites />} />
             </Route>
             <Route element={<ProtectedSalesManager />}>
               <Route path='/create-product' element={<CreateProduct />} />

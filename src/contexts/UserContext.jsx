@@ -83,7 +83,7 @@ export function UserContextProvider({ children }) {
     // console.log('cookies', cookies)
     // if (!cookies.token) return setLoading(false)
     const token = JSON.parse(localStorage.getItem('token'))
-    console.log('token default', token)
+    // console.log('token default', token)
     if (token === null) return setLoading(false)
     // console.log('token default', token)
     if (token.id === undefined) return setLoading(false)

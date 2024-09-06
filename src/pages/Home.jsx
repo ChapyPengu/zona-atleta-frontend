@@ -4,7 +4,6 @@ import ProductService from '../services/ProductService'
 import CategoryService from '../services/CategoryService'
 import ClientService from '../services/ClientService'
 
-
 import Header from '../components/home/Header'
 import CategoriesSection from '../components/home/CategoriesSection'
 import ProductsSection from '../components/home/ProductsSection'
@@ -16,10 +15,15 @@ import SectionCarrousel from '../components/home/SectionCarrousel'
 
 import { API_URL } from '../config/config'
 import { useBuy } from '../contexts/BuyContext'
+import Next from '../components/icons/ArrowRight'
+import Previus from '../components/icons/ArrowLeft'
 
 function Home({ name }) {
 
   const [products, setProducts] = useState([])
+  const [carrousel, setCarrousel] = useState([])
+  const [loadingCarrousel, setLoadingCarrousel] = useState(true)
+
   const [discount, setDiscount] = useState([])
   const [categories, setCategories] = useState([])
   const [popular, setPopular] = useState([])
@@ -41,8 +45,8 @@ function Home({ name }) {
 
   const navigate = useNavigate()
 
-  let offset = 15
-  let index = (page - 1) * offset
+  // let offset = 15
+  // let index = (page - 1) * offset
 
   // async function onClickCard(product) {
   //   return navigate(`/product/${product.id}`)
@@ -97,9 +101,29 @@ function Home({ name }) {
 
   useEffect(() => {
     async function getProducts() {
+      setLoadingCarrousel(true)
       try {
-        const products = await ProductService.getProductsRequest()
-        setProducts(products.slice(5, 20).map(p => ({ ...p, image: `${API_URL}${p.image}`, have: haveProduct(p) })))
+        const c = await ProductService.getProductsByPage(0, 6)
+        setCarrousel(c)
+      } catch (e) {
+        console.log(e)
+      }
+      setLoadingCarrousel(false)
+    }
+    getProducts()
+  }, [])
+
+  useEffect(() => {
+    async function getProducts() {
+      try {
+        if (page === undefined) {
+          const data = await ProductService.getProductsByPage(0, 20)
+          setProducts(data.map(p => ({ ...p, image: `${API_URL}${p.image}`, have: haveProduct(p) })))
+        } else {
+          const data = await ProductService.getProductsByPage(parseInt(page) * 20, 20)
+          setProducts(data.map(p => ({ ...p, image: `${API_URL}${p.image}`, have: haveProduct(p) })))
+        }
+        // setProducts(products.slice(5, 20))
         // console.log(products)
         // setDiscount(products)
         // setLast(products.slice(0, 15))
@@ -109,18 +133,18 @@ function Home({ name }) {
       }
     }
 
-    async function getCategories() {
-      try {
-        const categories = await CategoryService.getCategoriesRequest()
-        if (categories.length >= 5) {
-          setCategories(categories.slice(0, 5))
-        } else {
-          setCategories(categories)
-        }
-      } catch (e) {
-        // console.log(e)
-      }
-    }
+    // async function getCategories() {
+    //   try {
+    //     const categories = await CategoryService.getCategoriesRequest()
+    //     if (categories.length >= 5) {
+    //       setCategories(categories.slice(0, 5))
+    //     } else {
+    //       setCategories(categories)
+    //     }
+    //   } catch (e) {
+    //     // console.log(e)
+    //   }
+    // }
 
     async function getDiscounts() {
       try {
@@ -157,26 +181,30 @@ function Home({ name }) {
       }
     }
     getProducts()
-    getCategories()
+    // getCategories()
     getDiscounts()
     getPopular()
     getLasts()
     getImages()
-  }, [])
+  }, [page])
 
   return (
     <div className='home w-full'>
       <Header />
       <div className='max-w-[1536px] mx-auto flex flex-col gap-32'>
-        <SectionCarrousel title='Descuentos' products={products} amount={4} />
-        {/* <SectionCarrousel title='Descuentos' products={products} amount={6} /> */}
-        {/* <CategoriesSection title='Categorias' categories={categories} /> */}
+        <SectionCarrousel loading={loadingCarrousel} title='Descuentos' products={carrousel} amount={4} />
+        <CategoriesSection title='Categorias' categories={categories} />
         <div className='flex justify-center'>
           <button className='text-2xl font-bold text-white bg-primary px-12 py-4 hover:brightness-90 transition-all  rounded-full'>Comprar</button>
         </div>
-        <SectionCarrousel title='Ultimos agregados' products={products} amount={5} />
-        <SectionCarrousel title='Populares' products={products} amount={3} />
-        <ProductsSection title='Productos' products={products} />
+        <SectionCarrousel loading={loadingCarrousel} title='Ultimos agregados' products={carrousel} amount={5} />
+        <SectionCarrousel loading={loadingCarrousel} title='Populares' products={carrousel} amount={3} />
+        <div>
+          <ProductsSection title='Productos' products={products} page={page} navigate={navigate} />
+          <div className='grid place-items-center mt-16'>
+            
+          </div>
+        </div>
       </div>
       {/* <Header images={images} /> */}
       {/* <Link to='/create-product'>

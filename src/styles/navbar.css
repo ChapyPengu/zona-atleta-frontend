@@ -3,7 +3,7 @@
     display: block;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     position: block;
-    z-index: 9000;
+    z-index: 1100;
     background-color: var(--primary);
     top: 0;
 
