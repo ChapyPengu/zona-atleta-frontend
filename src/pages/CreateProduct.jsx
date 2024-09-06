@@ -27,7 +27,7 @@ function ProductCard({ product }) {
       <div className=''>
         <img className='w-full rounded-t-md max-h-64 object-cover' src={`${API_URL}${product.image}`} alt={product.name} />
       </div>
-      <div className='flex flex-col rounded-b-md bg-primary px-4 py-2 text-white h-full'>
+      <div className='flex flex-col rounded-b-md bg-primary px-4 py-2 text-white'>
         <p className=''>{product.name}</p>
         <p className='text-xl font-medium'>${formatearNumeroConPuntos(product.price)}</p>
       </div>
@@ -56,11 +56,11 @@ function CreateProduct() {
   }, [])
 
   return (
-    <div className='grid grid-cols-2 max-w-[1536px] mx-auto py-32'>
+    <div className='grid grid-cols-2 max-w-[1280px] mx-auto py-32 bg-red-200'>
       <div>
         <FormProduct products={products} setProducts={setProducts} />
       </div>
-      <div className='grid grid-cols-2 place-items-center gap-12'>
+      <div className='grid grid-cols-2  gap-12'>
         {
           loading
             ? <PageLoader />
