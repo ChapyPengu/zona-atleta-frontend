@@ -530,3 +530,7 @@ body {
     padding: 7.5rem 0;
     min-height: calc(100vh - 30rem);
 }
+
+.z-max {
+    z-index: 999999999!important;
+}

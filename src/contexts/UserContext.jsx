@@ -53,33 +53,44 @@ export function UserContextProvider({ children }) {
     const res = await AuthService.postLoginRequest({ username, password })
     setId(res.id)
     setProfile(res.profile)
+    localStorage.setItem('token', JSON.stringify(res))
   }
 
   async function loginSalesManager({ username, password }) {
     const res = await AuthService.postLoginSalesManagerRequest({ username, password })
     setId(res.id)
     setProfile(res.profile)
+    localStorage.setItem('token', JSON.stringify(res))
   }
 
   async function register({ username, email, password, passwordRepeat }) {
     const res = await AuthService.postRegisterRequest({ username, email, password, passwordRepeat })
     setId(res.id)
     setProfile(res.profile)
+    localStorage.setItem('token', JSON.stringify(res))
   }
 
   async function logout() {
     await AuthService.postLogoutRequest()
     setId(0)
     setProfile({})
+    localStorage.setItem('token', {})
   }
 
   async function verify() {
     setLoading(true)
-    const cookies = Cookies.get()
-    console.log('cookies', cookies)
-    if (!cookies.token) return setLoading(false)
+    // const cookies = Cookies.get()
+    // console.log('cookies', cookies)
+    // if (!cookies.token) return setLoading(false)
+    const token = JSON.parse(localStorage.getItem('token'))
+    console.log('token default', token)
+    if (token === null) return setLoading(false)
+    // console.log('token default', token)
+    if (token.id === undefined) return setLoading(false)
+    console.log('token valido', token)
     try {
-      const res = await AuthService.postVerifyRequest()
+      // const res = await AuthService.postVerifyRequest()
+      const res = token
       setId(res.id)
       setProfile(res.profile)
       socket.emit('auth', res)

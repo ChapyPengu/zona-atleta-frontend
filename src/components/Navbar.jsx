@@ -136,6 +136,7 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
           <div className='navbar-content__menu'>
             {
               userOptions.map((item, i) => {
+                // console.log(item)
                 if (item.to === '/logout') {
                   return <p key={i} className='link navbar-content__menu-item ' onClick={async () => {
                     try {
@@ -146,7 +147,8 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
                     }
                   }}>{item.name}</p>
                 } else {
-                  return <Link key={i} className='link navbar-content__menu-item ' to={item.to}>{item.name}</Link>
+                  // console.log(item)
+                  return <Link key={i} className='link navbar-content__menu-item z-max' to={item.to}>{item.name}</Link>
                 }
               })
             }
