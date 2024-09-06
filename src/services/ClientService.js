@@ -65,7 +65,7 @@ class ClientService {
   }
 
   static async postOrderByManyProduct(id, { paymentMethod, address }) {
-    const response = await axios.delete(`/api/client/${id}/orders-many`, {
+    const response = await axios.post(`/api/client/${id}/orders-many`, {
       paymentMethod,
       address
     })
