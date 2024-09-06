@@ -3,7 +3,7 @@ import ShoppingCartCard from './ShoppingCartCard'
 function ShoppingCartList({ products, onClickMoreProduct, onClickLessProduct, onClickDeleteProduct }) {
 
   return (
-    <div className='shopping-cart-list'>
+    <div className='grid grid-cols-2 gap-4 col-start-1 col-end-3'>
       {
         products.map((p, i) => (
           <ShoppingCartCard

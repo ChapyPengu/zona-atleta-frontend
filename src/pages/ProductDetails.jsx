@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import ProductService from '../services/ProductService'
 import Utilities from '../utilities/Utilities'
-import Loader from '../components/loader/Loader'
+import Loader from 'react-spinners/ClipLoader'
 import ErrorMessage from '../components/ErrorMessage'
 import { useUser } from '../contexts/UserContext'
+import { API_URL } from '../config/config'
+import Button from '../components/Button'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -57,9 +59,9 @@ function CommentCard({ comment }) {
         {
           response === null || response === undefined
             ? user.isSalesManager()
-              ? <div>
-                <input value={currentResponse} type="text" placeholder='Responder Comentario' onChange={handleChange} />
-                <button onClick={handleClick}>Responder</button>
+              ? <div className='flex gap-8'>
+                <input className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' value={currentResponse} type="text" placeholder='Responder Comentario' onChange={handleChange} />
+                <Button onClick={handleClick}>Responder</Button>
               </div>
               : <></>
             : <ResponseCard response={response} />
@@ -97,7 +99,7 @@ function ProductDetailsLayout({ product }) {
   }
 
   return (
-    <div className='flex justify-center items-center flex-col'>
+    <div className='flex justify-center items-center flex-col py-16 gap-8'>
       <div>
         <p className='product-details__name'>{product.name}</p>
       </div>
@@ -105,25 +107,32 @@ function ProductDetailsLayout({ product }) {
         <p className='product-details__description'>{product.description}</p>
       </div>
       <div className=''>
-        <img className='product-details__img' src={`${BACKEND_URL}${product.image}`} />
+        <img className='product-details__img' src={`${API_URL}${product.image}`} />
       </div>
-      <div>
-        <button>Comprar</button>
-        <button>Agregar Al Carrito</button>
+      <div className='flex gap-8'>
+        <Button>
+          Comprar
+        </Button>
+        <Button>
+          Agregar al Carrito
+        </Button>
       </div>
-      {
-        user.isClient()
-          ? <div>
-            <input value={comment} type="text" placeholder='Agrege un comentario' onChange={handleChange} />
-            <button onClick={handleClick}>Agregar</button>
-          </div>
-          : <></>
-      }
-
-      <div className='bg-white px-4 py-2 flex flex-col justify-center items-center gap-4 '>
+      <div className='flex flex-col gap-8'>
+        <h4 className='text-center text-2xl'>Comentarios</h4>
         {
-          comments.map((c, i) => <CommentCard key={i} comment={c} />)
+          user.isClient()
+            ? <div className='flex gap-4'>
+              <input className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline' value={comment} type="text" placeholder='Agrege un comentario' onChange={handleChange} />
+              <Button onClick={handleClick}>Agregar</Button>
+            </div>
+            : <></>
         }
+
+        <div className='bg-white px-4 py-2 flex flex-col justify-center items-center gap-4 '>
+          {
+            comments.map((c, i) => <CommentCard key={i} comment={c} />)
+          }
+        </div>
       </div>
     </div>
   )
@@ -157,7 +166,9 @@ function ProductDetails() {
     <div className='product-details'>
       {
         loanding
-          ? <Loader />
+          ? <div className='w-full h-96 grid place-items-center'>
+            <Loader />
+          </div>
           : error
             ? <ErrorMessage message='Error de servidor' />
             : <ProductDetailsLayout product={product} />

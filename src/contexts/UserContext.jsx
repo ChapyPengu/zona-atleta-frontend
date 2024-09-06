@@ -26,6 +26,7 @@ export function useUser() {
 export function UserContextProvider({ children }) {
 
   const [id, setId] = useState(0)
+  const [notifications, setNotifications] = useState(0)
   const [profile, setProfile] = useState({})
   const [loading, setLoading] = useState(true)
 
@@ -101,7 +102,9 @@ export function UserContextProvider({ children }) {
       login,
       loginSalesManager,
       register,
-      logout
+      logout,
+      notifications,
+      setNotifications
     }}>
       {children}
     </UserContext.Provider>

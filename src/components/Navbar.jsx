@@ -14,6 +14,7 @@ import Users from './icons/Users'
 import Like from './icons/Like'
 import Bell from './icons/Bell'
 import ClientService from '../services/ClientService'
+import Search from './icons/Search'
 
 const NONE_LINKS = [
   {
@@ -110,9 +111,24 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
 
   return (
     <div className='navbar-content'>
-      <Logo />
-      <ProductFilterName value={inputValue} onChange={inputOnChange} />
+      <div className='flex items-center gap-4 justify-center'>
+        {/* <Bars className='bars-icon-navbar' /> */}
+        <Logo />
+      </div>
+      <div className='flex gap-4 font-bold'>
+        <p className='capitalize hover:underline cursor-pointer'>categorias</p>
+        <p className='capitalize hover:underline cursor-pointer'>mujer</p>
+        <p className='capitalize hover:underline cursor-pointer'>hombre</p>
+        <p className='capitalize hover:underline cursor-pointer'>kid</p>
+        <p className='capitalize hover:underline cursor-pointer'>categorias</p>
+        <p className='capitalize hover:underline cursor-pointer'>marcas</p>
+        <p className='capitalize hover:underline cursor-pointer'>zapatillas</p>
+      </div>
+      {/* <ProductFilterName value={inputValue} onChange={inputOnChange} /> */}
       <div className='navbar-content__icons'>
+        <p className='link navbar-content-btn-icon'>
+          <Search />
+        </p>
         <div className='navbar-content__icon'>
           <button className='navbar-content-btn-icon navbar-account'>
             <User className='navbar-content-icon' />
@@ -121,7 +137,7 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
             {
               userOptions.map((item, i) => {
                 if (item.to === '/logout') {
-                  return <p key={i} className='link navbar-content__menu-item' onClick={async () => {
+                  return <p key={i} className='link navbar-content__menu-item ' onClick={async () => {
                     try {
                       await logout()
                       navigate('/home')
@@ -130,7 +146,7 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
                     }
                   }}>{item.name}</p>
                 } else {
-                  return <Link key={i} className='link navbar-content__menu-item' to={item.to}>{item.name}</Link>
+                  return <Link key={i} className='link navbar-content__menu-item ' to={item.to}>{item.name}</Link>
                 }
               })
             }
@@ -148,7 +164,21 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout }) {
           </div>
         </div>
         {
-          links.map((item, i) => <Link key={i} to={item.to} className='link navbar-content-btn-icon'>{item.icon}</Link>)
+          links.map((item, i) => {
+            if (item.name === 'Carrito de Compras') {
+              return <Link to={item.to} key={i} onClick={e => e.stopPropagation()}>
+                <button  onClick={(e) => e.stopPropagation()} className='navbar-content-btn-icon navbar-account notification'>
+                  <ShoppingCart className='navbar-content-icon' />
+                  {
+                    user.notifications !== 0
+                      ? <p className='notification-number'>{user.notifications}</p>
+                      : <></>
+                  }
+                </button>
+              </Link>
+            }
+            return <Link key={i} to={item.to} className='link navbar-content-btn-icon'>{item.icon}</Link>
+          })
         }
       </div>
     </div>
@@ -201,7 +231,7 @@ function NavbarResponsive({ userOptions, links, inputValue, inputOnChange, searc
 function NavbarComponent({ userOptions, links, inputValue, inputOnChange, menu, setMenu, search, setSearch, logout }) {
 
   return (
-    <div className='navbar'>
+    <div className='navbar bg-primary'>
       <div className='navbar-container'>
         <NavbarBase userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} />
         <NavbarResponsive userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />

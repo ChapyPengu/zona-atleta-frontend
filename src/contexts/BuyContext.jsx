@@ -21,34 +21,27 @@ export function BuyContextProvider({ children }) {
   const user = useUser()
 
   async function addProduct(product) {
-    setLoading(true)
     if (!user.isClient()) return
     const data = await ClientService.postProduct(user.id, product.id, { amount: 1 })
     console.log(data)
-    setLoading(false)
   }
 
 
   async function deleteProduct(product) {
-    setLoading(true)
     if (!user.isClient()) return
     const data = await ClientService.deleteProduct(user.id, product.id)
     console.log(data)
-    setLoading(false)
   }
 
 
   async function editProduct(product, { amount }) {
-    setLoading(true)
     if (!user.isClient()) return
     const data = await ClientService.putProduct(user.id, product.id, { amount })
     console.log(data)
-    setLoading(false)
   }
 
 
   async function buyOne(product) {
-    setLoading(true)
     if (!user.isClient()) return
     const data = await ClientService.postOrderByOneProduct(user.id, product.id, {
       paymentMethod: 'Mercado Pago',
@@ -56,12 +49,10 @@ export function BuyContextProvider({ children }) {
       amount: 1
     })
     console.log(data)
-    setLoading(false)
   }
 
 
   async function buy() {
-    setLoading(true)
     if (!user.isClient()) return
     const data = await ClientService.postOrderByManyProduct(user.id, {
       paymentMethod: 'Mercado Pago',
@@ -69,7 +60,13 @@ export function BuyContextProvider({ children }) {
       amount: 1
     })
     console.log(data)
-    setLoading(false)
+  }
+
+  function haveProduct(product) {
+    const found = products.find(p => parseInt(p.id) === parseInt(product.id))
+    if (found)
+      return true
+    return false
   }
 
   useEffect(() => {
@@ -100,7 +97,9 @@ export function BuyContextProvider({ children }) {
       deleteProduct,
       editProduct,
       buyOne,
-      buy
+      buy,
+      haveProduct,
+      setProducts
     }}>
       {children}
     </BuyContext.Provider>

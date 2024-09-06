@@ -7,7 +7,7 @@ import withReactContent from 'sweetalert2-react-content'
 
 const MySwal = withReactContent(Swal)
 
-function FormProduct() {
+function FormProduct({ products, setProducts }) {
 
   const [name, setName] = useState('')
   const [categoryId, setCategoryId] = useState(0)
@@ -73,7 +73,8 @@ function FormProduct() {
       // formData.append('price', price)
       // formData.append('stock', stock)
       formData.append('image', image[0])
-      await ProductService.postProductRequest(formData)
+      const newProduct = await ProductService.postProductRequest(formData)
+      setProducts([newProduct, ...products])
       MySwal.close()
     } catch (e) {
       setError(true)

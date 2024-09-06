@@ -35,13 +35,12 @@ function ShoppingCartDetails() {
   }
 
   return (
-    <div className='shopping-cart-details'>
-
-      <div>
-        <p className='shopping-cart-details__total-price'>Total de la Compra</p>
-        <p className='shopping-cart-details__total-price'>${total}</p>
+    <div className='col-start-3 col-end-4 bg-blue-200 py-8 text-center'>
+      <div className='text-center'>
+        <p className='text-2xl mb-2'>Total de la Compra</p>
+        <p className='text-2xl font-bold'>${total}</p>
       </div>
-      <button className='shopping-cart-details__btn-buy' onClick={handleClick}>
+      <button className='bg-primary text-white px-4 py-2 rounded-md text-xl font-semibold mt-4' onClick={handleClick}>
         Comprar Ahora
       </button>
     </div>
@@ -54,19 +53,18 @@ function ShoppingCart() {
   const { loading, products, error, message } = useBuy()
 
   return (
-    <div className='shopping-cart'>
+    <div className='shopping-cart page bg-blue-00 max-w-[1536px] mx-auto'>
       {
         loading
           ? <Loader size={64} />
           : products.length === 0
             ? <ShoppinCartVoid />
-            : <>
+            : <div className='grid grid-cols-3 items-start'>
               <ShoppingCartList
                 products={products}
               />
-              <ShoppingCartDetails
-              />
-            </>
+              <ShoppingCartDetails />
+            </div>
       }
     </div>
   )

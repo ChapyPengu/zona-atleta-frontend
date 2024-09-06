@@ -22,8 +22,9 @@
     --white: #ffffffff;
     --black: #2f3640;
     --silver: #777;
-    --primary: var(--blue);
-    --light-primary: var(--light-blue);
+    --primary-red: #ed3237;
+    --primary: var(--primary-red);
+    --light-primary: #ff6e1a;
     --primary-text: var(--black);
     --primary-surface: var(--white);
     --primary-surface-text: var(var(--black));
@@ -249,12 +250,11 @@ body {
 }
 
 .btn:disabled {
-    background-color: var(--silver);
     cursor: default;
 }
 
 .btn:disabled:hover {
-    background-color: var(--silver);
+
 }
 
 .btn:active {
@@ -284,6 +284,15 @@ body {
     background-color: var(--light-primary);
 }
 
+.btn-normal:disabled:hover {
+    background-color: var(--primary);
+    color: var(--white);
+
+    & svg {
+        fill: var(--white);
+    }
+}
+
 .btn-outline:hover {
     background-color: var(--primary);
     color: var(--white);
@@ -291,6 +300,16 @@ body {
     & svg {
         color: var(--white);
         fill: var(--white);
+    }
+}
+
+.btn-outline:disabled:hover {
+    background-color: transparent;
+    border: .1rem solid var(--primary);
+    color: var(--primary);
+
+    & svg {
+        fill: var(--primary);
     }
 }
 
@@ -505,4 +524,9 @@ body {
     min-height: 10rem;
     display: grid;
     place-items: center;
+}
+
+.page {
+    padding: 7.5rem 0;
+    min-height: calc(100vh - 30rem);
 }

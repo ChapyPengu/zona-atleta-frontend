@@ -12,6 +12,10 @@ import DiscountSection from '../components/home/DiscountSection'
 import LatestAdditions from '../components/home/LatestAdditions'
 import PopularProductsSection from '../components/home/PopularProductsSection'
 import Button from '../components/Button'
+import SectionCarrousel from '../components/home/SectionCarrousel'
+
+import { API_URL } from '../config/config'
+import { useBuy } from '../contexts/BuyContext'
 
 function Home({ name }) {
 
@@ -33,6 +37,7 @@ function Home({ name }) {
   // const [message, setMessage] = useState('')
 
   const { page } = useParams()
+  const { haveProduct } = useBuy()
 
   const navigate = useNavigate()
 
@@ -94,7 +99,11 @@ function Home({ name }) {
     async function getProducts() {
       try {
         const products = await ProductService.getProductsRequest()
-        setProducts(products)
+        setProducts(products.slice(5, 20).map(p => ({ ...p, image: `${API_URL}${p.image}`, have: haveProduct(p) })))
+        // console.log(products)
+        // setDiscount(products)
+        // setLast(products.slice(0, 15))
+        // setPopular(products.slice(0, 15))
       } catch (e) {
         // console.log(e)
       }
@@ -103,8 +112,8 @@ function Home({ name }) {
     async function getCategories() {
       try {
         const categories = await CategoryService.getCategoriesRequest()
-        if (categories.length >= 6) {
-          setCategories(categories.slice(0, 6))
+        if (categories.length >= 5) {
+          setCategories(categories.slice(0, 5))
         } else {
           setCategories(categories)
         }
@@ -156,16 +165,26 @@ function Home({ name }) {
   }, [])
 
   return (
-    <div className='home'>
-      <Header images={images} />
-      <Link to='/create-product'>
+    <div className='home w-full'>
+      <Header />
+      <div className='max-w-[1536px] mx-auto flex flex-col gap-32'>
+        <SectionCarrousel title='Descuentos' products={products} amount={4} />
+        <CategoriesSection title='Categorias' categories={categories} />
+        <div className='flex justify-center'>
+          <button className='text-2xl font-bold text-white bg-primary px-12 py-4 hover:brightness-90 transition-all  rounded-full'>Comprar</button>
+        </div>
+        <SectionCarrousel title='Ultimos agregados' products={products} amount={5} />
+        <SectionCarrousel title='Populares' products={products} amount={3} />
+        <ProductsSection title='Productos' products={products} />
+      </div>
+      {/* <Header images={images} /> */}
+      {/* <Link to='/create-product'>
         <Button>Crear productos</Button>
-      </Link>
-      <DiscountSection discounts={discount} />
-      <CategoriesSection categories={categories} />
-      <LatestAdditions last={last} />
-      <ProductsSection products={products} />
-      <PopularProductsSection popular={popular} />
+      </Link> */}
+      {/* <DiscountSection discounts={products} /> */}
+      {/* <CategoriesSection categories={categories} /> */}
+      {/* <LatestAdditions last={products} /> */}
+      {/* <PopularProductsSection popular={products} /> */}
       {/* <div>
         <CategoriesCarrousel categories={categories} />
       </div> */}

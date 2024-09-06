@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import ClientService from '../services/ClientService'
-import OrderList from '../components/order/OrderList'
+// import OrderList from '../components/order/OrderList'
 import PageLoader from '../components/loader/PageLoader'
 
 function Order() {
@@ -28,11 +28,11 @@ function Order() {
 
   return (
     <div>
-      {
+      {/* {
         loading
           ? <PageLoader />
           : <OrderList orders={orders} />
-      }
+      } */}
     </div>
   )
 }

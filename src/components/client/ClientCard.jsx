@@ -3,10 +3,11 @@ import Link from '../Link'
 function ClientCard({ client }) {
   return (
     <div className='client-card'>
-      <p className='name'>Nombre de usuario: {client.username}</p>
-      <p>Correo electronico: {client.email}</p>
-      <p>Perfil: {client.profile.name}</p>
-      <Link to={`/client/${client.id}/orders`}>Ver pedidos</Link>
+      <p className='text-xl font-semibold uppercase'>{client.username}</p>
+      <p className=''>{client.email}</p>
+      <Link className='cursor-pointer hover:text-primary hover:underline' to={`/client/${client.id}/orders`}>
+        Ver pedidos
+      </Link>
     </div>
   )
 }
