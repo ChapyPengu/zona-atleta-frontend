@@ -9,6 +9,7 @@ function ProtectedClient() {
   if (user.isLoading())
     return <PageLoader />
 
+  console.log('eres nono?', user.isNone())
   if (user.isNone())
     return <Navigate to='/login' />
 
