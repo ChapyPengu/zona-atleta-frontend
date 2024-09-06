@@ -74,7 +74,7 @@ export function UserContextProvider({ children }) {
     await AuthService.postLogoutRequest()
     setId(0)
     setProfile({})
-    localStorage.setItem('token', {})
+    localStorage.removeItem('token')
   }
 
   async function verify() {
