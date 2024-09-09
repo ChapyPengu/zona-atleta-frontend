@@ -4,20 +4,21 @@ import CategoryService from '../../services/CategoryService'
 import Button from '../Button'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import Input from '../Input'
 
 const MySwal = withReactContent(Swal)
 
-function FormProduct({ products, setProducts }) {
+function FormProduct() {
 
   const [name, setName] = useState('')
   const [categoryId, setCategoryId] = useState(0)
   const [description, setDescription] = useState('')
-  const [price, setPrice] = useState(0)
-  const [stock, setStock] = useState(0)
+  const [price, setPrice] = useState('')
+  const [stock, setStock] = useState('')
   const [image, setImage] = useState('')
   const [error, setError] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [submitDisabled, setSubmitDisabled] = useState(false)
+  const [submitDisabled, setSubmitDisabled] = useState(true)
 
   const [categories, setCategories] = useState([])
 
@@ -41,14 +42,24 @@ function FormProduct({ products, setProducts }) {
 
   function handleChangePrice(e) {
     const value = e.target.value
-    setPrice(value)
-    setError(false)
+    if (value === '') {
+      setPrice('')
+    }
+    if (!isNaN(parseInt(value))) {
+      setPrice(value)
+      setError(false)
+    }
   }
 
   function handleChangeStock(e) {
     const value = e.target.value
-    setStock(value)
-    setError(false)
+    if (value === '') {
+      setStock('')
+    }
+    if (!isNaN(parseInt(value))) {
+      setStock(value)
+      setError(false)
+    }
   }
 
   function handleChangeImage(e) {
@@ -69,12 +80,11 @@ function FormProduct({ products, setProducts }) {
       const formData = new FormData()
       formData.append('name', name)
       formData.append('categoryId', categoryId)
-      // formData.append('description', description)
-      // formData.append('price', price)
-      // formData.append('stock', stock)
+      formData.append('description', description)
+      formData.append('price', price)
+      formData.append('stock', stock)
       formData.append('image', image[0])
       const newProduct = await ProductService.postProductRequest(formData)
-      setProducts([newProduct, ...products])
       MySwal.close()
     } catch (e) {
       setError(true)
@@ -109,10 +119,12 @@ function FormProduct({ products, setProducts }) {
           : <></>
       }
       <div className='form__input-container'>
-        <div className='flex flex-col gap-2'>
-          <span className='form__text'>Nombre</span>
-          <input className='form__input' id='register-username' value={name} onChange={handleChangeName} type='text' placeholder=' ' required />
+        <Input value={name} onChange={handleChangeName} error={error} placeholder='Nombre' />
+        <div className='flex gap-8'>
+          <Input value={price} onChange={handleChangePrice} error={error} placeholder='Precio' />
+          <Input value={stock} onChange={handleChangeStock} error={error} placeholder='Stock' />
         </div>
+        <Input value={description} onChange={handleChangeDescription} error={error} placeholder='Descripcion' />
         <div className='flex flex-col gap-8'>
           <div className='flex gap-8'>
             <label className='block bg-transparent border-none outline-none text-lg' htmlFor='form-category'>Categoria</label>
@@ -127,18 +139,6 @@ function FormProduct({ products, setProducts }) {
             <input className='block bg-transparent border-none outline-none text-lg' id='register-password-repeat' onChange={handleChangeImage} type='file' placeholder=' ' required />
           </div>
         </div>
-        {/* <label className='form__label' htmlFor='register-password'>
-          <input className='form__input' id='register-password' value={description} onChange={handleChangeDescription} type='text' placeholder=' ' />
-          <span className='form__text'>Descripcion</span>
-        </label> */}
-        {/* <label className='form__label' htmlFor='register-password-repeat'>
-          <input className='form__input' id='register-password-repeat' value={price} onChange={handleChangePrice} type='text' placeholder=' ' required />
-          <span className='form__text'>Precio</span>
-        </label> */}
-        {/* <label className='form__label' htmlFor='register-password-repeat'>
-          <input className='form__input' id='register-password-repeat' value={stock} onChange={handleChangeStock} type='text' placeholder=' ' required />
-          <span className='form__text'>Unidades Disponibles</span>
-        </label> */}
       </div>
       <Button type='submit' disabled={submitDisabled}>Crear Producto</Button>
     </form>

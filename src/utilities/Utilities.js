@@ -22,17 +22,9 @@ class Utilities {
     return !isNaN(parseInt(str))
   }
 
-  static randomImg() {
-    const imgs = [
-      'pelotas.jpg',
-      'labtop.jpg',
-      'celular.jpg',
-      'baseball-ball.jpg',
-      'baseball-bate.jpg',
-      'basketball.jpg',
-      'baseball.jpg'
-    ]
-    return `/imgs/${imgs[Utilities.random(imgs.length)]}`
+  static formatNumberToPrice(n) {
+    let numStr = n.toString();
+    return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   }
 }
 

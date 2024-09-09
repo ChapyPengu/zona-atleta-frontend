@@ -9,6 +9,8 @@ const MySwal = withReactContent(Swal)
 
 const BuyContext = createContext()
 
+
+
 export function useBuy() {
   const context = useContext(BuyContext)
   if (!context)
@@ -48,20 +50,37 @@ export function BuyContextProvider({ children }) {
 
   async function buyOne(product) {
     if (!user.isClient()) return
-    MySwal.fire({
-      title: <p>Creando pedido...</p>,
-      showCloseButton: false,
-      showConfirmButton: false
-    })
-    const data = await ClientService.postOrderByOneProduct(user.id, product.id, {
-      paymentMethod: 'Mercado Pago',
-      address: 'Balbin 3219',
-      amount: 1
-    })
-    MySwal.close()
-    setTimeout(() => {
-      window.location.href = data.redirectUrl
-    }, 500)
+    Swal.fire({
+      title: "Ingrese la direccion del pedido",
+      input: "text",
+      inputAttributes: {
+        autocapitalize: "off"
+      },
+      showCancelButton: true,
+      confirmButtonText: "Aceptar",
+      showLoaderOnConfirm: true,
+      preConfirm: async (value) => {
+        const data = await ClientService.postOrderByOneProduct(user.id, product.id, {
+          paymentMethod: 'Mercado Pago',
+          address: value,
+          amount: 1
+        })
+        return data
+      },
+      allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: `El pedido se creo exitosamente`,
+          icon: 'success',
+          showConfirmButton: true,
+          showCancelButton: false,
+          timer: 2000
+        }).then(() => {
+          window.location.href = result.value.redirectUrl
+        })
+      }
+    });
   }
 
 

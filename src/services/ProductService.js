@@ -2,18 +2,6 @@ import axios from './intance/instance'
 
 class ProductService {
 
-  // static async getProductsRequest({
-  //   index = null,
-  //   offset = null,
-  //   name = null,
-  //   order = null,
-  //   minPrice = null,
-  //   maxPrice = null
-  // }) {
-  //   const response = await axios.get(`/api/product/index=${index}/offset=${offset}/name=${name}/min=${minPrice}/max=${maxPrice}}`)
-  //   return response.data
-  // }
-
   static async getProductsRequest() {
     const response = await axios.get('/api/product')
     return response.data
@@ -54,8 +42,34 @@ class ProductService {
     return response.data
   }
 
-  static async getProductsByPage(offset, limit) {
-    const response = await axios.get(`/api/product/page/${offset}/${limit}`)
+  static async getProducts(offset, limit) {
+    const response = await axios.get(`/api/product?offset=${offset}&limit=${limit}`)
+    return response.data
+  }
+
+  static async getDiscounts(offset, limit) {
+    const response = await axios.get(`/api/product/from/discount?offset=${offset}&limit=${limit}`)
+    return response.data
+  }
+
+  static async getPopulars(offset, limit) {
+    const response = await axios.get(`/api/product/from/popular?offset=${offset}&limit=${limit}`)
+    return response.data
+  }
+
+  static async getLast(offset, limit) {
+    const response = await axios.get(`/api/product/from/last?offset=${offset}&limit=${limit}`)
+    return response.data
+  }
+
+  static async put(id, { name, description, available, price, stock }) {
+    const response = await axios.put(`/api/product/${id}`, {
+      name,
+      description,
+      price,
+      stock,
+      available
+    })
     return response.data
   }
 }

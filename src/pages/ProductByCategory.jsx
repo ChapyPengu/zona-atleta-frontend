@@ -9,19 +9,6 @@ import Button from '../components/Button'
 import Utilities from '../utilities/Utilities'
 import Loader from 'react-spinners/ClipLoader'
 
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
-
-function formatearNumeroConPuntos(numero) {
-  // Convertir el número a string
-  let numStr = numero.toString();
-
-  // Usar una expresión regular para insertar puntos en los miles
-  let resultado = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-  return resultado;
-}
-
 function ProductCard({ product }) {
 
   const [loadingAdd, setLoadingAdd] = useState(false)
@@ -72,16 +59,12 @@ function ProductCard({ product }) {
     <div className='product-card' onClick={handleClick}>
       <div className='product-card__image-container'>
         <p className='product-card__more-see'>Ver mas</p>
-        {
-          product.image !== null
-            ? <img className='product-card__image' src={`${BACKEND_URL}/${product.image}`} alt={product.name} />
-            : <img className='product-card__image' src={Utilities.randomImg()} alt={product.name} />
-        }
+        <img className='product-card__image' src={product.image} alt={product.name} />
       </div>
       <div className='product-card__content'>
         <div className='flex items-center justify-between'>
           <p className='product-card__name'>{product.name}</p>
-          <p className='product-card__price'>${formatearNumeroConPuntos(product.price)}</p>
+          <p className='product-card__price'>${Utilities.formatNumberToPrice(product.price)}</p>
         </div>
         <div className='flex justify-start gap-8'>
           {
@@ -141,7 +124,7 @@ function ProductByCategory() {
     }
     getProductns()
   }, [])
-  
+
   return (
     <div className='max-w-[1536px] mx-auto py-32'>
       <div>

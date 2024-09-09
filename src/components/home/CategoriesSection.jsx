@@ -1,12 +1,10 @@
-import Carousel from 'react-multi-carousel'
-
-import Utilities from '../../utilities/Utilities'
 import { Link } from 'react-router-dom'
+import Carousel from 'react-multi-carousel'
 
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
-    items: 4
+    items: 6
   },
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
@@ -14,17 +12,17 @@ const responsive = {
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 2
+    items: 6
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 1
+    items: 6
   }
 }
 
 function CategoriesSection({ title }) {
 
-  const images = Utilities.createArray(7).map((item, i) => `sliders/slider-category-${i + 1}.jpg`)
+  const categories = ['hockey', 'tenis', 'moda', 'training', 'natacion', 'running', 'basquet', 'futbol']
 
   return (
     <div >
@@ -44,30 +42,11 @@ function CategoriesSection({ title }) {
         dotListClass="custom-dot-list-style"
         itemClass="carousel-item-padding-40-px mx-2"
       >
-        <Link to='/category/hockey'>
-          <img className='' src='sliders/slider-category-1.jpg' />
-        </Link>
-        <Link to='/category/tenis'>
-          <img className='' src='sliders/slider-category-2.jpg' />
-        </Link>
-        <Link to='/category/moda'>
-          <img className='' src='sliders/slider-category-3.jpg' />
-        </Link>
-        <Link to='/category/training'>
-          <img className='' src='sliders/slider-category-4.jpg' />
-        </Link>
-        <Link to='/category/natacion'>
-          <img className='' src='sliders/slider-category-5.jpg' />
-        </Link>
-        <Link to='/category/running'>
-          <img className='' src='sliders/slider-category-6.jpg' />
-        </Link>
-        <Link to='/category/basquet'>
-          <img className='' src='sliders/slider-category-7.jpg' />
-        </Link>
-        <Link to='/category/futbol'>
-          <img className='' src='sliders/slider-category-8.jpg' />
-        </Link>
+        {
+          categories.map((category, index) => <Link key={index} to={`/category/${category}`}>
+            <img src={`/sliders/slider-category-${index + 1}.jpg`} />
+          </Link>)
+        }
       </Carousel>
     </div>
   )

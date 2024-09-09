@@ -26,6 +26,7 @@ export function useUser() {
 export function UserContextProvider({ children }) {
 
   const [id, setId] = useState(0)
+  const [username, setUsername] = useState('')
   const [notifications, setNotifications] = useState(0)
   const [profile, setProfile] = useState({})
   const [loading, setLoading] = useState(true)
@@ -53,6 +54,7 @@ export function UserContextProvider({ children }) {
     const res = await AuthService.postLoginRequest({ username, password })
     setId(res.id)
     setProfile(res.profile)
+    setUsername(res.username)
     localStorage.setItem('token', JSON.stringify(res))
   }
 
@@ -60,6 +62,7 @@ export function UserContextProvider({ children }) {
     const res = await AuthService.postLoginSalesManagerRequest({ username, password })
     setId(res.id)
     setProfile(res.profile)
+    setUsername(res.username)
     localStorage.setItem('token', JSON.stringify(res))
   }
 
@@ -67,6 +70,7 @@ export function UserContextProvider({ children }) {
     const res = await AuthService.postRegisterRequest({ username, email, password, passwordRepeat })
     setId(res.id)
     setProfile(res.profile)
+    setUsername(res.username)
     localStorage.setItem('token', JSON.stringify(res))
   }
 
@@ -74,6 +78,7 @@ export function UserContextProvider({ children }) {
     await AuthService.postLogoutRequest()
     setId(0)
     setProfile({})
+    setUsername('')
     localStorage.removeItem('token')
   }
 
@@ -93,7 +98,8 @@ export function UserContextProvider({ children }) {
       const res = token
       setId(res.id)
       setProfile(res.profile)
-      socket.emit('auth', res)
+      setUsername(res.username)
+      // socket.emit('auth', res)
       console.log('verify devuelve', res)
     } catch (e) {
       console.log(e)
@@ -108,6 +114,7 @@ export function UserContextProvider({ children }) {
   return (
     <UserContext.Provider value={{
       id,
+      username,
       isLoading,
       isNone,
       isClient,

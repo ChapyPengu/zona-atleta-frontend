@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedAuth from './routes/ProtectedAuth'
 import ProtectedNotAuth from './routes/ProtectedNotAuth'
@@ -15,57 +15,22 @@ import OrderDetails from './pages/OrderDetails'
 import Client from './pages/Client'
 import ClientDetails from './pages/ClientDetails'
 import CreateProduct from './pages/CreateProduct'
+import ClientOrders from './pages/ClientOrders'
+import Favorites from './pages/Favorites'
+import ProductByCategory from './pages/ProductByCategory'
+import ProductByName from './pages/ProductByName'
 import NotFound from './pages/NotFound'
 import Layout from './layouts/Layout'
 import Chatbot from './components/Chatbot'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
-import ClientOrders from './pages/ClientOrders'
-import Favorites from './pages/Favorites'
 import { ToastContainer } from 'react-toastify';
-import ProductByCategory from './pages/ProductByCategory'
-import ProductByName from './pages/ProductByName'
+import Admin from './pages/Admin'
 
 function App() {
 
   const [navbarActive, setNavbarActive] = useState(true)
   const [name, setName] = useState('')
-
-  useEffect(() => {
-    // console.log('1')
-
-    // if (document.startViewTransition) {
-    // window.navigation.addEventListener('navigation', (event) => {
-    //   const toUrl = new URL(event.destination.url)
-    //   console.log('1')
-    //   if (location.origin !== toUrl.origin) return
-    //   console.log('2')
-
-    //   event.intercept({
-    //     async handler() {
-    //     console.log('3')
-
-    //       const response = await fetch(toUrl.pathname)
-    //       const text = await response.text()
-
-    //       const [, data] = text.match(/<body>([\s\S]*)<\/body>/i)
-
-    //       document.startViewTransition(() => {
-    //         console.log('hoa')
-    //         // document.body.innerHTML = data
-    //         document.documentElement.scrollTop = 0
-    //       })
-    //     }
-    //   })
-    // })
-    // }
-
-    return () => {
-      // window.navigation.addEventListener('navigation', () => {
-
-      // })
-    }
-  }, [])
 
   return (
     <>
@@ -81,9 +46,8 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
         style={{
-          zIndex: '1300'
+          zIndex: '1500'
         }} />
       <ToastContainer />
       <Layout>
@@ -107,6 +71,7 @@ function App() {
               <Route path='/favorites' element={<Favorites />} />
             </Route>
             <Route element={<ProtectedSalesManager />}>
+              <Route path='/admin' element={<Admin />} />
               <Route path='/create-product' element={<CreateProduct />} />
               <Route path='/client' element={<Client />} />
               <Route path='/client/:id' element={<ClientDetails />} />

@@ -1,24 +1,21 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import Loader from 'react-spinners/ClipLoader'
+import { toast } from 'react-toastify'
 import ProductService from '../services/ProductService'
 import Utilities from '../utilities/Utilities'
-import Loader from 'react-spinners/ClipLoader'
 import ErrorMessage from '../components/ErrorMessage'
 import { useUser } from '../contexts/UserContext'
 import { API_URL } from '../config/config'
 import Button from '../components/Button'
 import Like from '../components/icons/Like'
 import ClientService from '../services/ClientService'
-import { toast } from 'react-toastify'
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 function ResponseCard({ response }) {
-  console.log(response)
   return (
     <div>
-      {response.message}
-      hola
+      <p>{response.message}</p>
     </div>
   )
 }
@@ -29,8 +26,6 @@ function CommentCard({ comment }) {
   const [currentResponse, setCurrentResponse] = useState('')
 
   const user = useUser()
-
-  console.log(comment)
 
   async function handleClick() {
     const responseBefore = response
@@ -131,12 +126,11 @@ function ProductDetailsLayout({ product }) {
         <p className='product-details__description'>{product.description}</p>
       </div>
       <div className='flex justify-start items-start gap-8'>
-        <img className='product-details__img' src={`${API_URL}${product.image}`} />
+        <img className='product-details__img' src={product.image} />
         <div className='flex flex-col justify-start items-start gap-6'>
           <p className='text-4xl font-semibold'>${product.price}</p>
           <div>
             <p className='text-xl font-normal'>Unidades disponibles: {product.stock}</p>
-            {/* <p className='text-4xl font-semibold'>${product.price}</p> */}
           </div>
           <div className='flex gap-4'>
             <Button className=''>
@@ -163,14 +157,15 @@ function ProductDetailsLayout({ product }) {
 
         </div>
       </div>
-      {/* <div className='flex gap-8'> */}
-
-      {/* </div> */}
       <div className='bg-primary w-[1024px] h-[2px] rounded-full'>
-
       </div>
       <div className='flex flex-col gap-8'>
         <h4 className='text-center text-2xl'>Comentarios</h4>
+        {
+          user.isNone()
+            ? <Button>Inicia sesion para agregar comentarios</Button>
+            : <></>
+        }
         {
           user.isClient()
             ? <div className='flex gap-4'>
@@ -179,12 +174,15 @@ function ProductDetailsLayout({ product }) {
             </div>
             : <></>
         }
-
-        <div className='bg-white px-4 py-2 flex flex-col justify-center items-center gap-4 '>
-          {
-            comments.map((c, i) => <CommentCard key={i} comment={c} />)
-          }
-        </div>
+        {
+          comments.length === 0
+            ? <p className='text-center'>El articulo no tiene comentarios</p>
+            : <div className='bg-white px-4 py-2 flex flex-col justify-center items-center gap-4 '>
+              {
+                comments.map((c, i) => <CommentCard key={i} comment={c} />)
+              }
+            </div>
+        }
       </div>
     </div>
   )
@@ -202,7 +200,6 @@ function ProductDetails() {
     async function getProductById() {
       setLoading(true)
       try {
-        console.log(id)
         const response = await ProductService.getProductByIdRequest(id)
         setProduct(response)
       } catch (e) {

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../contexts/UserContext'
 import Validator from '../../utilities/Validator'
 import Button from '../Button'
+import Input from '../Input'
 
 function FormRegister() {
 
@@ -87,33 +88,23 @@ function FormRegister() {
 
   return (
     <form className='form' onSubmit={handleSubmit}>
-      <p className='form__title'>Crear Cuenta</p>
-      {
-        error
-          ? <p className='form__error-message'>{errorMessage}</p>
-          : <></>
-      }
-      <div className='form__input-container'>
-        <label className='form__label' htmlFor='register-username'>
-          <input className='form__input' id='register-username' value={username} onChange={handleChangeUsername} type='text' placeholder=' ' />
-          <span className='form__text'>Nombre de usuario</span>
-        </label>
-        <label className='form__label' htmlFor='register-email'>
-          <input className='form__input' id='register-email' value={email} onChange={handleChangeEmail} type='text' placeholder=' ' />
-          <span className='form__text'>Correo Electronico</span>
-        </label>
-        <label className='form__label' htmlFor='register-password'>
-          <input className='form__input' id='register-password' value={password} onChange={handleChangePassword} type='password' placeholder=' ' />
-          <span className='form__text'>Contraseña</span>
-        </label>
-        <label className='form__label' htmlFor='register-password-repeat'>
-          <input className='form__input' id='register-password-repeat' value={passwordRepeat} onChange={handleChangePasswordRepeat} type='password' placeholder=' ' />
-          <span className='form__text'>Repetir Contraseña</span>
-        </label>
+      <div>
+        <h2 className='text-3xl mb-4'>Crear Cuenta</h2>
+        {
+          error
+            ? <p className='text-red-500 mb-2 text-center'>{errorMessage}</p>
+            : <></>
+        }
       </div>
-      <Button type='submit' disabled={submitDisabled}>Crear Cuenta</Button>
-      <p className='login-not-have-account '>
-        Tienes una cuenta? <Link className='' to='/login'>Inicia sesion aqui</Link>
+      <div className='flex flex-col gap-6'>
+        <Input error={error} placeholder='Nombre de usuario' value={username} onChange={handleChangeUsername} />
+        <Input error={error} placeholder='Correo electronico' value={email} onChange={handleChangeEmail} />
+        <Input error={error} placeholder='Contraseña' type='password' value={password} onChange={handleChangePassword} />
+        <Input error={error} placeholder='Repetir Contraseña' type='password' value={passwordRepeat} onChange={handleChangePasswordRepeat} />
+        <Button type='submit' disabled={submitDisabled}>Crear Cuenta</Button>
+      </div>
+      <p className='text-center mt-2'>
+        Tienes una cuenta? <Link className='text-red-700 hover:underline' to='/login'>Inicia sesion aqui</Link>
       </p>
     </form>
   )

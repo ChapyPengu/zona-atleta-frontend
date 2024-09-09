@@ -5,7 +5,6 @@ import { AppContextProvider } from './contexts/AppContext.jsx'
 import { UserContextProvider } from './contexts/UserContext.jsx'
 import { OrderManagerContextProvider } from './contexts/OrderManager.jsx'
 import { BuyContextProvider } from './contexts/BuyContext.jsx'
-// import Carousel from 'react-multi-carousel';
 import App from './App.jsx'
 import './styles/normalize.css'
 import './styles/index.css'
@@ -20,7 +19,6 @@ import './styles/home.css'
 import './styles/profile.css'
 import './styles/layout.css'
 import './styles/shopping-cart.css'
-
 import 'react-multi-carousel/lib/styles.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'animate.css';

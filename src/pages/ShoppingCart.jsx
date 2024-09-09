@@ -51,7 +51,6 @@ function ShoppingCartDetails() {
 
 function ShoppingCart() {
 
-
   const { loading, products, error, message } = useBuy()
 
   return (

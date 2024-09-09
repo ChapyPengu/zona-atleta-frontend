@@ -17,10 +17,19 @@ class ClientService {
     return response.data
   }
 
-  static async putByIdRequest(id, { username, password }) {
+  static async confirmPassword(id, password) {
+    const response = await axios.post(`/api/client/${id}/confirm`, {
+      password
+    })
+    return response.data
+  }
+
+  static async putByIdRequest(id, { username, email, password, newPassword }) {
     const response = await axios.put(`/api/client/${id}`, {
       username,
-      password
+      email,
+      password,
+      newPassword
     })
     return response.data
   }

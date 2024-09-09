@@ -49,14 +49,9 @@ const CLIENT_LINKS = [
 
 const SALES_MANAGER_LINKS = [
   {
-    name: 'Pedidos',
-    to: '/order',
+    name: 'Admin',
+    to: '/admin',
     icon: <OrderSalesManager />
-  },
-  {
-    name: 'Clientes',
-    to: '/client',
-    icon: <Users />
   }
 ]
 
@@ -93,7 +88,7 @@ const SALES_MANAGER_OPTIONS = [
   }
 ]
 
-function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout, search, setSearch }) {
+function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, logout, search, setSearch }) {
 
   const [notifications, setNotifications] = useState([])
 
@@ -124,48 +119,52 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout, sea
         search
           ? <ProductFilterName value={inputValue} onChange={inputOnChange} />
           : <div className='flex gap-4 font-bold'>
-            <p className='capitalize hover:underline cursor-pointer'>categorias</p>
-            <p className='capitalize hover:underline cursor-pointer'>mujer</p>
-            <p className='capitalize hover:underline cursor-pointer'>hombre</p>
-            <p className='capitalize hover:underline cursor-pointer'>kid</p>
-            <p className='capitalize hover:underline cursor-pointer'>categorias</p>
-            <p className='capitalize hover:underline cursor-pointer'>marcas</p>
-            <p className='capitalize hover:underline cursor-pointer'>zapatillas</p>
+            <Link to='/product/?type=category' className='capitalize hover:underline cursor-pointer'>categorias</Link>
+            <Link to='/product/?type=mujer' className='capitalize hover:underline cursor-pointer'>mujer</Link>
+            <Link to='/product/?type=hombre' className='capitalize hover:underline cursor-pointer'>hombre</Link>
+            <Link to='/product/?type=kid' className='capitalize hover:underline cursor-pointer'>kid</Link>
+            <Link to='/product/?type=marcas' className='capitalize hover:underline cursor-pointer'>marcas</Link>
+            <Link to='/product/?type=zapatillas' className='capitalize hover:underline cursor-pointer'>zapatillas</Link>
           </div>
       }
-      <div className='navbar-content__icons'>
-        <p className='link navbar-content-btn-icon' onClick={() => {
-          // navigate(`/product/name/${inputValue}`)
-          setSearch(!search)
-        }}>
-          <Search />
-        </p>
-        <div className='navbar-content__icon'>
-          <button className='navbar-content-btn-icon navbar-account'>
-            <User className='navbar-content-icon' />
-          </button>
-          <div className='navbar-content__menu'>
-            {
-              userOptions.map((item, i) => {
-                // console.log(item)
-                if (item.to === '/logout') {
-                  return <p key={i} className='link navbar-content__menu-item ' onClick={async () => {
-                    try {
-                      await logout()
-                      navigate('/home')
-                    } catch (e) {
-                      console.log(e)
-                    }
-                  }}>{item.name}</p>
-                } else {
-                  // console.log(item)
-                  return <Link key={i} className='link navbar-content__menu-item z-max' to={item.to}>{item.name}</Link>
-                }
-              })
-            }
+      <div>
+        {
+          username
+            ? <div className='mb-2'>
+              <p className='text-center font-bold'>Hola <span className='uppercase'>{username}</span>!</p>
+            </div>
+            : <></>
+        }
+        <div className='navbar-content__icons'>
+          <p className='link navbar-content-btn-icon' onClick={() => {
+            setSearch(!search)
+          }}>
+            <Search />
+          </p>
+          <div className='navbar-content__icon'>
+            <button className='navbar-content-btn-icon navbar-account'>
+              <User className='navbar-content-icon' />
+            </button>
+            <div className='navbar-content__menu'>
+              {
+                userOptions.map((item, i) => {
+                  if (item.to === '/logout') {
+                    return <p key={i} className='link navbar-content__menu-item ' onClick={async () => {
+                      try {
+                        await logout()
+                        navigate('/home')
+                      } catch (e) {
+                        console.log(e)
+                      }
+                    }}>{item.name}</p>
+                  } else {
+                    return <Link key={i} className='link navbar-content__menu-item z-max' to={item.to}>{item.name}</Link>
+                  }
+                })
+              }
+            </div>
           </div>
-        </div>
-        <div className='navbar-content__icon'>
+          {/* <div className='navbar-content__icon'>
           <button className='navbar-content-btn-icon navbar-account notification'>
             <Bell className='navbar-content-icon' />
             <p className='notification-number'>1</p>
@@ -175,24 +174,25 @@ function NavbarBase({ userOptions, links, inputValue, inputOnChange, logout, sea
               notifications.map((n, i) => <p key={i} className='link navbar-content__menu-item'>{n.message}</p>)
             }
           </div>
+        </div> */}
+          {
+            links.map((item, i) => {
+              if (item.name === 'Carrito de Compras') {
+                return <Link to={item.to} key={i} onClick={e => e.stopPropagation()}>
+                  <button onClick={(e) => e.stopPropagation()} className='navbar-content-btn-icon navbar-account notification'>
+                    <ShoppingCart className='navbar-content-icon' />
+                    {
+                      user.notifications !== 0
+                        ? <p className='notification-number'>{user.notifications}</p>
+                        : <></>
+                    }
+                  </button>
+                </Link>
+              }
+              return <Link key={i} to={item.to} className='link navbar-content-btn-icon'>{item.icon}</Link>
+            })
+          }
         </div>
-        {
-          links.map((item, i) => {
-            if (item.name === 'Carrito de Compras') {
-              return <Link to={item.to} key={i} onClick={e => e.stopPropagation()}>
-                <button onClick={(e) => e.stopPropagation()} className='navbar-content-btn-icon navbar-account notification'>
-                  <ShoppingCart className='navbar-content-icon' />
-                  {
-                    user.notifications !== 0
-                      ? <p className='notification-number'>{user.notifications}</p>
-                      : <></>
-                  }
-                </button>
-              </Link>
-            }
-            return <Link key={i} to={item.to} className='link navbar-content-btn-icon'>{item.icon}</Link>
-          })
-        }
       </div>
     </div>
   )
@@ -241,13 +241,13 @@ function NavbarResponsive({ userOptions, links, inputValue, inputOnChange, searc
   )
 }
 
-function NavbarComponent({ userOptions, links, inputValue, inputOnChange, menu, setMenu, search, setSearch, logout }) {
+function NavbarComponent({ username, userOptions, links, inputValue, inputOnChange, menu, setMenu, search, setSearch, logout }) {
 
   return (
     <div className='navbar bg-primary'>
       <div className='navbar-container'>
-        <NavbarBase userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} search={search} setSearch={setSearch} />
-        <NavbarResponsive userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
+        <NavbarBase username={username} userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} search={search} setSearch={setSearch} />
+        <NavbarResponsive username={username} userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
       </div>
     </div>
   )
@@ -267,7 +267,8 @@ function Navbar({ active, inputValue, inputOnChange }) {
     setMenu,
     search,
     setSearch,
-    logout: user.logout
+    logout: user.logout,
+    username: user.username
   }
 
   useEffect(() => {

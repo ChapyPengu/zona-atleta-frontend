@@ -1,5 +1,5 @@
 import Carousel from 'react-multi-carousel'
-// import { API_URL } from '../../config/config'
+import Subtitle from '../Subtitle'
 
 const responsive = {
   superLargeDesktop: {
@@ -20,21 +20,11 @@ const responsive = {
   }
 }
 
-const API_URL = 'https://zona-atleta-backend-production.up.railway.app'
-
 function SectionCarrousel({ title, loading, products, amount = 5 }) {
 
   return (
     <section>
-        <h1 className="pl-8 my-8 text-3xl uppercase font-black bg-gradient-to-r from-primary  to-[#ff9f1a] inline-block text-transparent bg-clip-text">{title}</h1>
-
-      {/* <h4 className='text-4xl font-semibold my-8'>{title}</h4> */}
-      {/* <div className="w-96 h-48 rounded-md  p-0.5">
-        <div className="w-full h-full rounded-md  flex items-center justify-center">
-          <p className="text-2xl font-manrope font-bold text-white">Pagedone Design System</p>
-        </div>
-      </div> */}
-      {/* <div className='bg-primary py-16 rounded bg-gradient-to-tr from-primary to-[#ff9f1a] px-8 w-full min-h-32'> */}
+      <Subtitle>{title}</Subtitle>
       <Carousel
         swipeable={false}
         draggable={false}
@@ -50,15 +40,13 @@ function SectionCarrousel({ title, loading, products, amount = 5 }) {
       >
         {
           products.map((p, i) => {
-            console.log(loading)
             if (loading) {
               return <div key={i} className='min-w-32 min-h-32 bg-primary rounded-sm'></div>
             }
-            return <img key={i} className='' src={`${API_URL}${p.image}`} alt={p.name} />
+            return <img key={i} className='' src={p.image} alt={p.name} />
           })
         }
       </Carousel>
-      {/* </div> */}
     </section>
 
   )
