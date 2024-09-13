@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Xmark from '../components/icons/Xmark'
 import ChatboxIcon from '../components/icons/ChatbotIcon'
+import { useUser } from '../contexts/UserContext'
 
 const CLIENT_OPTIONS = [
   '',
@@ -12,27 +13,27 @@ const SALES_MANAGR_OPTIONS = [
   {
     name: 'Crear productos',
     response: 'Para crear productos entre al siguiente enlaze.',
-    link: '/profile'
+    link: '/admin/product'
   },
   {
     name: 'Cancelar ordenes',
     response: 'Para cancelar ordenes entre al siguiente enlaze.',
-    link: '/order'
+    link: '/admin/order'
   },
   {
     name: 'Administrar usuarios',
     response: 'Para administrar usuarios entre al siguiente enlaze.',
-    link: '/client'
+    link: '/admin/client'
   },
   {
     name: 'Descargar facturas',
     response: 'Para descargar facturas entre al siguiente enlaze.',
-    link: '/order'
+    link: '/admin/order'
   },
   {
     name: 'Seguimiento de ventas',
     response: 'Para ver el seguimiento entre al siguiente enlaze.',
-    link: '/order'
+    link: '/admin/order'
   }
 ]
 
@@ -84,6 +85,8 @@ function Chatbot() {
   const [message, setMessage] = useState('')
   const [link, setLink] = useState('')
 
+  const user = useUser()
+
   function handleClick() {
     setActive(!active)
   }
@@ -93,24 +96,29 @@ function Chatbot() {
     setLink(link)
   }
 
-  return (
-    <div className='chatbot'>
-      <div style={{ display: active ? 'none' : 'grid' }} className='chatbot__start' onClick={handleClick}>
-        <ChatboxIcon />
-      </div>
-      <div style={{ display: active ? 'block' : 'none' }} className='chatbot__messages'>
-        <button className='chatbot__close-message' onClick={handleClick}><Xmark /></button>
-        <div className='chatbot__messages-container'>
-          <ChatbotMessage type={TYPES_MESSAGES.NORMAL} message='Hola Buen dia!, en que puedo ayudarte?' />
-          <ChatbotOptions options={SALES_MANAGR_OPTIONS} createMessage={createMessage} />
-          {
-            message !== ''
-              ? <ChatbotMessage type={TYPES_MESSAGES.RESPONSE} message={message} link={link} />
-              : <></>
-          }
+  if (user.isSalesManager())
+    return (
+      <div className='chatbot'>
+        <div style={{ display: active ? 'none' : 'grid' }} className='chatbot__start' onClick={handleClick}>
+          <ChatboxIcon />
+        </div>
+        <div style={{ display: active ? 'block' : 'none' }} className='chatbot__messages'>
+          <button className='chatbot__close-message' onClick={handleClick}><Xmark /></button>
+          <div className='chatbot__messages-container'>
+            <ChatbotMessage type={TYPES_MESSAGES.NORMAL} message='Hola Buen dia!, en que puedo ayudarte?' />
+            <ChatbotOptions options={SALES_MANAGR_OPTIONS} createMessage={createMessage} />
+            {
+              message !== ''
+                ? <ChatbotMessage type={TYPES_MESSAGES.RESPONSE} message={message} link={link} />
+                : <></>
+            }
+          </div>
         </div>
       </div>
-    </div>
+    )
+
+  return (
+    <></>
   )
 }
 

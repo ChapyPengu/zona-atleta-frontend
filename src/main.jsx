@@ -5,6 +5,7 @@ import { AppContextProvider } from './contexts/AppContext.jsx'
 import { UserContextProvider } from './contexts/UserContext.jsx'
 import { OrderManagerContextProvider } from './contexts/OrderManager.jsx'
 import { BuyContextProvider } from './contexts/BuyContext.jsx'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import App from './App.jsx'
 import './styles/normalize.css'
 import './styles/index.css'
@@ -26,15 +27,17 @@ import 'animate.css';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <AppContextProvider>
-        <UserContextProvider>
-          <OrderManagerContextProvider>
-            <BuyContextProvider>
-              <App />
-            </BuyContextProvider>
-          </OrderManagerContextProvider>
-        </UserContextProvider>
-      </AppContextProvider>
+      <GoogleOAuthProvider clientId="431133807061-7e5c6g7miqgqaudebn1d4k5e38lp8h2q.apps.googleusercontent.com">
+        <AppContextProvider>
+          <UserContextProvider>
+            <OrderManagerContextProvider>
+              <BuyContextProvider>
+                <App />
+              </BuyContextProvider>
+            </OrderManagerContextProvider>
+          </UserContextProvider>
+        </AppContextProvider>
+      </GoogleOAuthProvider>
     </BrowserRouter>
   </StrictMode>
 )

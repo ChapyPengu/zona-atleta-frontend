@@ -15,6 +15,8 @@ import Like from './icons/Like'
 import Bell from './icons/Bell'
 import ClientService from '../services/ClientService'
 import Search from './icons/Search'
+import { useBuy } from '../contexts/BuyContext'
+import Container from './Container'
 
 const NONE_LINKS = [
   {
@@ -50,7 +52,7 @@ const CLIENT_LINKS = [
 const SALES_MANAGER_LINKS = [
   {
     name: 'Admin',
-    to: '/admin',
+    to: '/admin/product',
     icon: <OrderSalesManager />
   }
 ]
@@ -79,8 +81,8 @@ const CLIENT_OPTIONS = [
 
 const SALES_MANAGER_OPTIONS = [
   {
-    name: 'Cuenta',
-    to: '/profile'
+    name: 'Nueva cuenta',
+    to: '/register-sales-manager'
   },
   {
     name: 'Cerrar Sesion',
@@ -95,6 +97,7 @@ function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, l
   const navigate = useNavigate()
 
   const user = useUser()
+  const { products } = useBuy()
 
   useEffect(() => {
     async function getNotifications() {
@@ -182,8 +185,8 @@ function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, l
                   <button onClick={(e) => e.stopPropagation()} className='navbar-content-btn-icon navbar-account notification'>
                     <ShoppingCart className='navbar-content-icon' />
                     {
-                      user.notifications !== 0
-                        ? <p className='notification-number'>{user.notifications}</p>
+                      products.length !== 0
+                        ? <p className='notification-number'>{products.length}</p>
                         : <></>
                     }
                   </button>
@@ -245,10 +248,10 @@ function NavbarComponent({ username, userOptions, links, inputValue, inputOnChan
 
   return (
     <div className='navbar bg-primary'>
-      <div className='navbar-container'>
+      <Container >
         <NavbarBase username={username} userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} logout={logout} search={search} setSearch={setSearch} />
         <NavbarResponsive username={username} userOptions={userOptions} links={links} inputValue={inputValue} inputOnChange={inputOnChange} menu={menu} setMenu={setMenu} search={search} setSearch={setSearch} />
-      </div>
+      </Container>
     </div>
   )
 }

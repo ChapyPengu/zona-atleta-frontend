@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useBuy } from '../contexts/BuyContext'
-import Button from '../components/Button'
-import ErrorMessage from '../components/ErrorMessage'
-import ShoppingCartList from '../components/shopping-cart/ShoppingCartList'
-import Loader from '../components/loader/Loader'
+import { useBuy } from '../../contexts/BuyContext'
+import Button from '../../components/Button'
+import ErrorMessage from '../../components/ErrorMessage'
+import ShoppingCartList from '../../components/shopping-cart/ShoppingCartList'
+import Loader from '../../components/loader/Loader'
 
 function ShoppinCartVoid() {
   return (
@@ -19,14 +19,11 @@ function ShoppinCartVoid() {
   )
 }
 
-function ShoppingCartDetails() {
-
-  const { products, buy } = useBuy()
+function ShoppingCartDetails({ products, buy }) {
 
   const total = products.reduce((acum, p) => acum + p.price, 0)
 
   async function handleClick() {
-    console.log('Comprando')
     try {
       await buy()
     } catch (e) {
@@ -51,7 +48,7 @@ function ShoppingCartDetails() {
 
 function ShoppingCart() {
 
-  const { loading, products, error, message } = useBuy()
+  const { loading, products, error, message, buy } = useBuy()
 
   return (
     <div className='shopping-cart page bg-blue-00 max-w-[1536px] mx-auto'>
@@ -64,7 +61,7 @@ function ShoppingCart() {
               <ShoppingCartList
                 products={products}
               />
-              <ShoppingCartDetails />
+              <ShoppingCartDetails products={products} buy={buy}/>
             </div>
       }
     </div>

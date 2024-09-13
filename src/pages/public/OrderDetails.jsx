@@ -1,25 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import OrderService from '../services/OrderService'
-import PageLoader from '../components/loader/PageLoader'
-import ErrorMessage from '../components/ErrorMessage'
-import { useOrderManager } from '../contexts/OrderManager'
-import Utilities from '../utilities/Utilities'
-import { useUser } from '../contexts/UserContext'
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+import { useUser } from '../../contexts/UserContext'
+import OrderService from '../../services/OrderService'
+import PageLoader from '../../components/loader/PageLoader'
+import ErrorMessage from '../../components/ErrorMessage'
+import { useOrderManager } from '../../contexts/OrderManager'
+import Utilities from '../../utilities/Utilities'
 
 function ProductCard({ product }) {
   return (
     <div className='flex justify-start items-center gap-4'>
-      <img className='w-16 h-16 bg-primary' src={`${BACKEND_URL}${product.image}`} alt="" />
+      <img className='w-16 h-16 bg-primary' src={product.image} alt={product.name} />
       <div>
         <p className='text-lg'>{product.name}</p>
         <p>Cantidad: {product.amount}</p>
         <p>Precio unitario: ${product.price}</p>
       </div>
-      {/* <div> */}
-      {/* </div> */}
     </div>
   )
 }

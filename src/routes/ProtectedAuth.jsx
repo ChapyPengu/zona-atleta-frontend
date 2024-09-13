@@ -9,10 +9,8 @@ function ProtectedAuth() {
   if (user.isLoading())
     return <PageLoader />
 
-  if (user.isNone()){
-    console.log('nashe')
+  if (user.isNone())
     return <Navigate to='/login' />
-  }
 
   return <Outlet />
 }

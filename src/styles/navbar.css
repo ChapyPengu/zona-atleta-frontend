@@ -6,6 +6,7 @@
     z-index: 1100;
     background-color: var(--primary);
     top: 0;
+    padding: 2.5rem 0;
 
     & * {
         color: white !important;
@@ -19,7 +20,7 @@
 
 .navbar-container {
     display: block;
-    /* max-width: 1280px; */
+    max-width: 1280px;
     margin: auto;
     padding: 2rem 1rem;
 }

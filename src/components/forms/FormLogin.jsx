@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useUser } from '../../contexts/UserContext'
 import Validator from '../../utilities/Validator'
@@ -6,8 +6,13 @@ import Button from '../Button'
 import Input from '../Input'
 import Lock from '../icons/Lock'
 import User from '../icons/User'
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google'
+import axios from 'axios'
 
 function FormLogin() {
+
+  const [profile, setProfile] = useState([])
+  const [user, setUser] = useState([])
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -16,7 +21,7 @@ function FormLogin() {
   const [submitDisabled, setSubmitDisabled] = useState(true)
   const [client, setClient] = useState(true)
 
-  const { login, loginSalesManager } = useUser()
+  const { login, loginSalesManager, googleLogin } = useUser()
 
   const navigate = useNavigate()
 
@@ -72,6 +77,51 @@ function FormLogin() {
     postLogin()
   }
 
+  async function handleGoogleLogin(token) {
+    console.log(token)
+    try {
+      // await googleLogin(credentialResponse)
+      const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json'
+        }
+      })
+      // setProfile(res.data)
+      console.log(res.data)
+      navigate('/home')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const googleLoginUse = useGoogleLogin({
+    onSuccess: (res) => {
+      setUser(res)
+      console.log('res', res)
+    },
+    onError: (err) => console.log(err)
+  })
+
+
+  useEffect(() => {
+    console.log(user.access_token)
+    if (user) {
+      axios
+        .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            Accept: 'application/json'
+          }
+        })
+        .then((res) => {
+          setProfile(res.data);
+          console.log(res.data)
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user])
+
   return (
     <form className='form' onSubmit={handleSubmit}>
       <div>
@@ -94,6 +144,19 @@ function FormLogin() {
         <Link className='text-red-700 hover:underline'>Olvido su contraseña?</Link>
       </div>
       <Button type='submit' disabled={submitDisabled}>Iniciar Sesion</Button>
+      <button onClick={googleLoginUse}>Login with google</button>
+      {/* {
+        client
+          ? <div className='block mx-auto max-w-64 rounded-full'>
+            <GoogleLogin
+              onSuccess={handleGoogleLogin}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />
+          </div>
+          : <></>
+      } */}
       <div className='flex flex-col items-center gap-4'>
         <p className='login-not-have-account'>No tienes una cuenta? <Link className='text-red-700 hover:underline' to='/register'>Registrate</Link></p>
         <p className='text-red-500 cursor-pointer hover:underline hover:text-red-700' onClick={handleClick}>

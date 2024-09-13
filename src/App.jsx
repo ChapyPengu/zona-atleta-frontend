@@ -1,36 +1,41 @@
-import { useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useState, useLayoutEffect } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
 import ProtectedAuth from './routes/ProtectedAuth'
 import ProtectedNotAuth from './routes/ProtectedNotAuth'
 import ProtectedClient from './routes/ProtectedClient'
 import ProtectedSalesManager from './routes/ProtectedSalesManager'
-import Home from './pages/Home'
-import Profile from './pages/Profile'
-import ShoppingCart from './pages/ShoppingCart'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import ProductDetails from './pages/ProductDetails'
-import Order from './pages/Order'
-import OrderDetails from './pages/OrderDetails'
-import Client from './pages/Client'
-import ClientDetails from './pages/ClientDetails'
-import CreateProduct from './pages/CreateProduct'
-import ClientOrders from './pages/ClientOrders'
-import Favorites from './pages/Favorites'
-import ProductByCategory from './pages/ProductByCategory'
-import ProductByName from './pages/ProductByName'
-import NotFound from './pages/NotFound'
-import Layout from './layouts/Layout'
+import Home from './pages/public/Home'
+import Product from './pages/public/Product'
+import ProductDetails from './pages/public/ProductDetails'
+import OrderDetails from './pages/public/OrderDetails'
+import NotFound from './pages/public/NotFound'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import RegisterSalesManager from './pages/auth/RegisterSalesManager'
+import Profile from './pages/client/Profile'
+import ShoppingCart from './pages/client/ShoppingCart'
+import ClientOrders from './pages/client/Orders'
+import Favorites from './pages/client/Favorites'
+import Admin from './pages/admin/Admin'
+import ClientDetails from './pages/admin/ClientDetails'
+import LayoutApp from './layouts/LayoutApp';
 import Chatbot from './components/Chatbot'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
-import { ToastContainer } from 'react-toastify';
-import Admin from './pages/Admin'
 
 function App() {
 
   const [navbarActive, setNavbarActive] = useState(true)
   const [name, setName] = useState('')
+  const location = useLocation()
+
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    // const noti = new Audio('/sounds/notification.mp3')
+    // noti.play()
+    // document.title = `${name}`
+  }, [location.pathname])
 
   return (
     <>
@@ -49,38 +54,34 @@ function App() {
         style={{
           zIndex: '1500'
         }} />
-      <ToastContainer />
-      <Layout>
+      <LayoutApp>
         <Routes>
           <Route path='/' element={<Navigate to='/home' />} />
           <Route path='/home' element={<Home />} />
           <Route path='/home/page/:page' element={<Home />} />
-          <Route path='/category/:name' element={<ProductByCategory />} />
-          <Route path='/name/:name' element={<ProductByName />} />
+          <Route path='/' element={<Product />} />
+          <Route path='/product/:id' element={<ProductDetails />} />
           <Route element={<ProtectedNotAuth />}>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
           </Route>
-          <Route path='/product/:id' element={<ProductDetails />} />
           <Route element={<ProtectedAuth />}>
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/order' element={<Order />} />
             <Route path='/order/:id' element={<OrderDetails />} />
             <Route element={<ProtectedClient />}>
               <Route path='/shopping-cart' element={<ShoppingCart />} />
               <Route path='/favorites' element={<Favorites />} />
+              <Route path='/profile' element={<Profile />} />
+              <Route path='/order' element={<ClientOrders />} />
             </Route>
             <Route element={<ProtectedSalesManager />}>
-              <Route path='/admin' element={<Admin />} />
-              <Route path='/create-product' element={<CreateProduct />} />
-              <Route path='/client' element={<Client />} />
+              <Route path='/admin/:option' element={<Admin />} />
+              <Route path='/register-sales-manager' element={<RegisterSalesManager />} />
               <Route path='/client/:id' element={<ClientDetails />} />
-              <Route path='/client/:id/orders' element={<ClientOrders />} />
             </Route>
           </Route>
           <Route path='*' element={<NotFound setNavbarActive={setNavbarActive} />} />
         </Routes>
-      </Layout>
+      </LayoutApp>
       <Footer />
     </>
   )

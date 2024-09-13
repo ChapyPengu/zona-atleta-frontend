@@ -5,39 +5,23 @@ import Validator from '../../utilities/Validator'
 import Button from '../Button'
 import Input from '../Input'
 
-function FormRegister() {
+function FormRegisterSalesManager() {
 
   const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [passwordRepeat, setPasswordRepeat] = useState('')
-  const [salesManager, setSalesManager] = useState(false)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [submitDisabled, setSubmitDisabled] = useState(true)
 
-  const { register, isSalesManager } = useUser()
+  const { registerSalesManager } = useUser()
   const navigate = useNavigate()
 
   function handleChangeUsername(e) {
     const value = e.target.value
     setUsername(value)
     setError(false)
-    if (Validator.validateRegister(value, email, password, passwordRepeat)) {
-      setSubmitDisabled(false)
-    } else {
-      setSubmitDisabled(true)
-    }
-    if (value === '') {
-      setSubmitDisabled(true)
-    }
-  }
-
-  function handleChangeEmail(e) {
-    const value = e.target.value
-    setEmail(value)
-    setError(false)
-    if (Validator.validateRegister(username, value, password, passwordRepeat)) {
+    if (Validator.validateRegisterSalesManager(value, password, passwordRepeat)) {
       setSubmitDisabled(false)
     } else {
       setSubmitDisabled(true)
@@ -51,7 +35,7 @@ function FormRegister() {
     const value = e.target.value
     setPassword(value)
     setError(false)
-    if (Validator.validateRegister(username, email, value, passwordRepeat)) {
+    if (Validator.validateRegisterSalesManager(username, value, passwordRepeat)) {
       setSubmitDisabled(false)
     } else {
       setSubmitDisabled(true)
@@ -65,7 +49,7 @@ function FormRegister() {
     const value = e.target.value
     setPasswordRepeat(value)
     setError(false)
-    if (Validator.validateRegister(username, email, password, value)) {
+    if (Validator.validateRegisterSalesManager(username, password, value)) {
       setSubmitDisabled(false)
     } else {
       setSubmitDisabled(true)
@@ -78,7 +62,7 @@ function FormRegister() {
   async function handleSubmit(e) {
     e.preventDefault()
     try {
-      await register({ username, email, password })
+      await registerSalesManager({ username, password })
       navigate('/home')
     } catch (e) {
       setError(true)
@@ -90,7 +74,7 @@ function FormRegister() {
   return (
     <form className='form' onSubmit={handleSubmit}>
       <div>
-        <h2 className='text-3xl mb-4'>Crear Cuenta</h2>
+        <h2 className='text-3xl mb-4'>Nuevo Jefe de Ventas</h2>
         {
           error
             ? <p className='text-red-500 mb-2 text-center'>{errorMessage}</p>
@@ -99,16 +83,12 @@ function FormRegister() {
       </div>
       <div className='flex flex-col gap-6'>
         <Input error={error} placeholder='Nombre de usuario' value={username} onChange={handleChangeUsername} />
-        <Input error={error} placeholder='Correo electronico' value={email} onChange={handleChangeEmail} />
         <Input error={error} placeholder='Contraseña' type='password' value={password} onChange={handleChangePassword} />
         <Input error={error} placeholder='Repetir Contraseña' type='password' value={passwordRepeat} onChange={handleChangePasswordRepeat} />
-        <Button type='submit' disabled={submitDisabled}>Crear Cuenta</Button>
+        <Button type='submit' disabled={submitDisabled}>Crear</Button>
       </div>
-      <p className='text-center mt-2'>
-        Tienes una cuenta? <Link className='text-red-700 hover:underline' to='/login'>Inicia sesion aqui</Link>
-      </p>
     </form>
   )
 }
 
-export default FormRegister
+export default FormRegisterSalesManager

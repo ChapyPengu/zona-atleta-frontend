@@ -382,7 +382,7 @@ body {
     & .chatbot__start {
         width: 4rem;
         height: 4rem;
-        background-color: var(--blue);
+        background-color: var(--primary-red);
         border-radius: 50%;
         display: grid;
         place-items: center;
@@ -396,11 +396,11 @@ body {
     }
 
     & .chatbot__start:hover {
-        background-color: var(--light-blue);
+        background-color: var(--light-primary);
     }
 
     & .chatbot__start:active {
-        /* outline: .25rem solid var(--light-blue); */
+        /* outline: .25rem solid var(--light-primary); */
         scale: 1.25;
     }
 
@@ -434,11 +434,11 @@ body {
     }
 
     & .chatbot__close-message:hover {
-        background-color: var(--light-blue);
+        background-color: var(--light-primary);
     }
 
     & .chatbot__close-message:active {
-        /* outline: .25rem solid var(--light-blue); */
+        /* outline: .25rem solid var(--light-primary); */
         scale: 1.25;
     }
 

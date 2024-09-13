@@ -50,35 +50,52 @@ export function UserContextProvider({ children }) {
     return profile.id === PROFILES.SALES_MANAGER.id
   }
 
-  async function login({ username, password }) {
-    const res = await AuthService.postLoginRequest({ username, password })
-    setId(res.id)
-    setProfile(res.profile)
-    setUsername(res.username)
-    localStorage.setItem('token', JSON.stringify(res))
+  function setUser(user) {
+    setId(user.id)
+    setProfile(user.profile)
+    setUsername(user.username)
   }
+
+  function resetUser() {
+    setId(0)
+    setProfile({})
+    setUsername('')
+  }
+
+  async function login({ username, password }) {
+    const user = await AuthService.postLoginRequest({ username, password })
+    setUser(user)
+    localStorage.setItem('token', JSON.stringify(user))
+  }
+  
 
   async function loginSalesManager({ username, password }) {
-    const res = await AuthService.postLoginSalesManagerRequest({ username, password })
-    setId(res.id)
-    setProfile(res.profile)
-    setUsername(res.username)
-    localStorage.setItem('token', JSON.stringify(res))
+    const user = await AuthService.postLoginSalesManagerRequest({ username, password })
+    setUser(user)
+    localStorage.setItem('token', JSON.stringify(user))
   }
 
-  async function register({ username, email, password, passwordRepeat }) {
-    const res = await AuthService.postRegisterRequest({ username, email, password, passwordRepeat })
-    setId(res.id)
-    setProfile(res.profile)
-    setUsername(res.username)
-    localStorage.setItem('token', JSON.stringify(res))
+  async function googleLogin(credentials) {
+    const user = await AuthService.postGoogleLoginRequest(credentials)
+    setUser(user)
+    localStorage.setItem('token', JSON.stringify(user))
+  }
+
+  async function register({ username, email, password }) {
+    const user = await AuthService.postRegisterRequest({ username, email, password })
+    setUser(user)
+    localStorage.setItem('token', JSON.stringify(user))
+  }
+
+  async function registerSalesManager({ username, password }) {
+    const user = await AuthService.postRegisterSalesManagerRequest({ username, password })
+    setUser(user)
+    localStorage.setItem('token', JSON.stringify(user))
   }
 
   async function logout() {
     await AuthService.postLogoutRequest()
-    setId(0)
-    setProfile({})
-    setUsername('')
+    resetUser()
     localStorage.removeItem('token')
   }
 
@@ -92,15 +109,11 @@ export function UserContextProvider({ children }) {
     if (token === null) return setLoading(false)
     // console.log('token default', token)
     if (token.id === undefined) return setLoading(false)
-    console.log('token valido', token)
     try {
       // const res = await AuthService.postVerifyRequest()
-      const res = token
-      setId(res.id)
-      setProfile(res.profile)
-      setUsername(res.username)
+      const user = token
+      setUser(user)
       // socket.emit('auth', res)
-      console.log('verify devuelve', res)
     } catch (e) {
       console.log(e)
     }
@@ -122,6 +135,7 @@ export function UserContextProvider({ children }) {
       login,
       loginSalesManager,
       register,
+      registerSalesManager,
       logout,
       notifications,
       setNotifications

@@ -7,8 +7,10 @@ class ProductService {
     return response.data
   }
 
-  static async getProductByIdRequest(id) {
-    const response = await axios.get(`/api/product/${id}`)
+  static async getProductByIdRequest(id, { clientId } = {}) {
+    const response = await axios.post(`/api/product/${id}`, {
+      clientId,
+    })
     return response.data
   }
 

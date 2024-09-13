@@ -1,5 +1,6 @@
 import Carousel from 'react-multi-carousel'
 import Subtitle from '../Subtitle'
+import Loader from 'react-spinners/ClipLoader'
 
 const responsive = {
   superLargeDesktop: {
@@ -20,33 +21,46 @@ const responsive = {
   }
 }
 
-function SectionCarrousel({ title, loading, products, amount = 5 }) {
+function SectionCarrouselLoader() {
+  return (
+    <div className='min-h-64 flex justify-center items-center'>
+      <Loader />
+    </div>
+  )
+}
+
+function SectionCarrousel({ title, isLoading, amount = 5, children }) {
 
   return (
     <section>
-      <Subtitle>{title}</Subtitle>
-      <Carousel
-        swipeable={false}
-        draggable={false}
-        responsive={{ ...responsive, desktop: { ...responsive.desktop, items: amount } }}
-        infinite={true}
-        autoPlay={true}
-        autoPlaySpeed={1000}
-        customTransition="all 1s"
-        transitionDuration={1000}
-        containerClass="carousel-container"
-        dotListClass="custom-dot-list-style"
-        itemClass="carousel-item-padding-40-px mx-"
-      >
+      <header>
+        <Subtitle>{title}</Subtitle>
+      </header>
+      <div>
         {
-          products.map((p, i) => {
-            if (loading) {
-              return <div key={i} className='min-w-32 min-h-32 bg-primary rounded-sm'></div>
-            }
-            return <img key={i} className='' src={p.image} alt={p.name} />
-          })
+          isLoading
+            ? <SectionCarrouselLoader />
+            : children.length === 0
+              ? <div className='min-h-64 flex justify-center items-center'>
+                <p className='text-xl font-semibold text-primary'>No hay {title.toLowerCase()} disponibles</p>
+              </div>
+              : <Carousel
+                swipeable={false}
+                draggable={false}
+                responsive={{ ...responsive, desktop: { ...responsive.desktop, items: amount } }}
+                infinite={true}
+                autoPlay={true}
+                autoPlaySpeed={1000}
+                customTransition="all 1s"
+                transitionDuration={1000}
+                containerClass="carousel-container"
+                dotListClass="custom-dot-list-style"
+                itemClass="carousel-item-padding-40-px mx-"
+              >
+                {children}
+              </Carousel>
         }
-      </Carousel>
+      </div>
     </section>
 
   )

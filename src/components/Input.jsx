@@ -1,4 +1,3 @@
-import { useRef } from "react"
 
 function Input({
   className = '',
@@ -11,7 +10,6 @@ function Input({
   disabled = false,
   reff
 }) {
-  // console.log(ref)
   return (
     <div className={className}>
       <div className="flex gap-8">

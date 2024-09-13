@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useBuy } from '../contexts/BuyContext'
-import ProductService from '../services/ProductService'
-import Header from '../components/home/Header'
-import CategoriesSection from '../components/home/CategoriesSection'
-import ProductsSection from '../components/home/ProductsSection'
-import SectionCarrousel from '../components/home/SectionCarrousel'
+import { useBuy } from '../../contexts/BuyContext'
+import ProductService from '../../services/ProductService'
+import Header from '../../components/home/Header'
+import CategoriesSection from '../../components/home/CategoriesSection'
+import ProductsSection from '../../components/home/ProductsSection'
+import SectionCarrousel from '../../components/home/SectionCarrousel'
+import ProductCarrouselCard from '../../components/home/ProductCarrouselCard'
+import ProductDiscountCard from '../../components/home/ProductDiscountCard'
+import LayoutHome from '../../layouts/LayoutHome'
 
 function Home() {
 
@@ -54,7 +57,7 @@ function Home() {
     }
     getDiscounts()
   }, [])
-  
+
   useEffect(() => {
     async function getPopulars() {
       setLoadingPopularProducts(true)
@@ -68,14 +71,13 @@ function Home() {
     }
     getPopulars()
   }, [])
-  
+
   useEffect(() => {
     async function getLast() {
       setLoadingLastProducts(true)
       try {
         const data = await ProductService.getLast(0, 7)
         setLastProducts(data.results)
-        console.log(data.results)
       } catch (e) {
         console.log(e)
       }
@@ -85,15 +87,27 @@ function Home() {
   }, [])
 
   return (
-    <div className='home w-full'>
+    <div className=''>
       <Header />
-      <div className='max-w-[1536px] mx-auto flex flex-col gap-32'>
-        <SectionCarrousel loading={loadingDiscountedProducts} title='Descuentos' products={discountedProducts} amount={4} />
+      <LayoutHome>
+        <SectionCarrousel isLoading={loadingDiscountedProducts} title='Descuentos' products={discountedProducts} amount={4}>
+          {
+            discountedProducts.map((p, i) => <ProductDiscountCard key={i} productDiscount={p} />)
+          }
+        </SectionCarrousel>
         <CategoriesSection title='Categorias' />
-        <SectionCarrousel loading={loadingLastProducts} title='Ultimos agregados' products={lastProducts} amount={5} />
-        <SectionCarrousel loading={loadingPopularProducts} title='Populares' products={popularProducts} amount={3} />
-        <ProductsSection title='Productos' products={products} loading={loadingProducts} page={page} navigate={navigate} />
-      </div>
+        <SectionCarrousel isLoading={loadingLastProducts} title='Ultimos agregados' products={lastProducts} amount={5}>
+          {
+            lastProducts.map((p, i) => <ProductCarrouselCard key={i} product={p} />)
+          }
+        </SectionCarrousel>
+        <SectionCarrousel isLoading={loadingPopularProducts} title='Populares' products={popularProducts} amount={3}>
+          {
+            popularProducts.map((p, i) => <ProductCarrouselCard key={i} product={p} />)
+          }
+        </SectionCarrousel>
+        <ProductsSection title='Productos' products={products} isLoading={loadingProducts} page={page} navigate={navigate} />
+      </LayoutHome>
     </div>
   )
 }

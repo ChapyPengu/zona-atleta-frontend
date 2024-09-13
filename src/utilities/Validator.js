@@ -29,6 +29,10 @@ class Validator {
   static validateRegister(username, email, password, passwordRepeat) {
     return this.validateUsername(username) && this.validateEmail(email) && this.validatePasswordForRegister(password) && password === passwordRepeat
   }
+
+  static validateRegisterSalesManager(username, password, passwordRepeat) {
+    return this.validateUsername(username) && this.validatePasswordForRegister(password) && password === passwordRepeat
+  }
 }
 
 export default Validator

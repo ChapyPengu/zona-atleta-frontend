@@ -116,6 +116,7 @@ export function BuyContextProvider({ children }) {
       try {
         const res = await ClientService.getProducts(user.id)
         setProducts(res)
+        console.log(res)
       } catch (e) {
         console.log(e)
         setError(true)

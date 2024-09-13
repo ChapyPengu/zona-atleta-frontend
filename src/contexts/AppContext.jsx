@@ -1,4 +1,4 @@
-import { useState, useContext, createContext, useEffect } from 'react'
+import { useEffect, useContext, createContext } from 'react'
 import io from 'socket.io-client'
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL

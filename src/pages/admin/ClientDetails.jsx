@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import ClientService from '../services/ClientService'
-import Loader from '../components/loader/Loader'
-import ErrorMessage from '../components/ErrorMessage'
+import ClientService from '../../services/ClientService'
+import Loader from '../../components/loader/Loader'
+import ErrorMessage from '../../components/ErrorMessage'
 
 function ClientDetails() {
 

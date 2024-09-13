@@ -1,11 +1,7 @@
 import Button from '../Button'
 import ShoppingCart from '../icons/ShoppingCart'
-import Utilities from '../../utilities/Utilities'
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 
 function ProductCard({ product, onClick = () => { }, onClickAdd = () => { }, onClickBuy = () => { } }) {
-
 
   function handleClick(e) {
     e.stopPropagation()
@@ -26,11 +22,7 @@ function ProductCard({ product, onClick = () => { }, onClickAdd = () => { }, onC
     <div className='product-card' onClick={handleClick}>
       <div className='product-card__image-container'>
         <p className='product-card__more-see'>Ver mas</p>
-        {
-          product.image !== null
-            ? <img className='product-card__image' src={`${BACKEND_URL}${product.image}`} alt={product.name} />
-            : <img className='product-card__image' src={Utilities.randomImg()} alt={product.name} />
-        }
+        <img className='product-card__image' src={product.image} alt={product.name} />
       </div>
       <div className='product-card__content'>
         <p className='product-card__name'>{product.name}</p>

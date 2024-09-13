@@ -118,26 +118,25 @@
     align-items: center;
     gap: .5rem;
     padding: .5rem 1rem;
-    border-radius: 10px;
-    border: 2px solid white;
+    border-radius: 9999px;
+    border: 1px solid white;
 
     & .searchbar__input {
         width: 100%;
         background-color: transparent;
         outline: none;
         border: none;
-        color: white!important;
-    }
-
-    & .searchbar__input::placeholder {
-        color: white!important;
+        color: white;
     }
 
     & .searchbar__icon {
         width: 1.25rem;
         height: 1.25rem;
-        /* padding: .5rem; */
     }
+}
+
+.searchbar__input::placeholder {
+    color: white;
 }
 
 /* Filters */

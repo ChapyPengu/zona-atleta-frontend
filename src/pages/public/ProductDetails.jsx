@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Loader from 'react-spinners/ClipLoader'
 import { toast } from 'react-toastify'
-import ProductService from '../services/ProductService'
-import Utilities from '../utilities/Utilities'
-import ErrorMessage from '../components/ErrorMessage'
-import { useUser } from '../contexts/UserContext'
-import { API_URL } from '../config/config'
-import Button from '../components/Button'
-import Like from '../components/icons/Like'
-import ClientService from '../services/ClientService'
-
+import ProductService from '../../services/ProductService'
+import Utilities from '../../utilities/Utilities'
+import ErrorMessage from '../../components/ErrorMessage'
+import { useUser } from '../../contexts/UserContext'
+import Button from '../../components/Button'
+import Like from '../../components/icons/Like'
+import ClientService from '../../services/ClientService'
+import { useBuy } from '../../contexts/BuyContext'
+import Delete from '../../components/icons/Delete'
 
 function ResponseCard({ response }) {
   return (
@@ -69,13 +69,12 @@ function CommentCard({ comment }) {
   )
 }
 
-function ProductDetailsLayout({ product }) {
-
+function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClickRemoveFavorite = () => { }, loadingFavorite }) {
   const [comments, setComments] = useState([...product.comments])
   const [comment, setComment] = useState('')
-  const [loadingFavorites, setLoadingFavorites] = useState(false)
 
   const user = useUser()
+  const { addProduct, buyOne } = useBuy()
 
   function handleChange(e) {
     setComment(e.target.value)
@@ -97,64 +96,67 @@ function ProductDetailsLayout({ product }) {
     }
   }
 
-  async function addFavorites() {
-    setLoadingFavorites(true)
-    try {
-      const data = await ClientService.postFavorite(user.id, product.id)
-      toast('Se agrego a favoritos', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light"
-      });
-    } catch (e) {
-      console.log(e)
-    }
-    setLoadingFavorites(false)
-  }
-
   return (
     <div className='flex justify-center items-center flex-col py-16 gap-8'>
       <div>
         <p className='product-details__name'>{product.name}</p>
       </div>
-      <div>
-        <p className='product-details__description'>{product.description}</p>
-      </div>
+
       <div className='flex justify-start items-start gap-8'>
         <img className='product-details__img' src={product.image} />
         <div className='flex flex-col justify-start items-start gap-6'>
-          <p className='text-4xl font-semibold'>${product.price}</p>
+          <p className='text-4xl font-semibold'>${Utilities.formatNumberToPrice(product.price)}</p>
           <div>
             <p className='text-xl font-normal'>Unidades disponibles: {product.stock}</p>
           </div>
+          <div>
+            <p className='product-details__description'>{product.description}</p>
+          </div>
           <div className='flex gap-4'>
-            <Button className=''>
+            <Button className='' onClick={async () => {
+              try {
+                await buyOne(product)
+              } catch (e) {
+                console.log(e)
+              }
+            }}>
               Comprar
             </Button>
-            <Button variant='outline'>
+            <Button variant='outline' onClick={async () => {
+              try {
+                await addProduct(product)
+              } catch (e) {
+                console.log(e)
+              }
+            }}>
               Agregar al Carrito
             </Button>
           </div>
           {
             user.isClient()
-              ? <Button onClick={addFavorites} className='flex justify-center items-center gap-4'>
-                {
-                  loadingFavorites
-                    ? <Loader color='white' />
-                    : <>
-                      Agregar a favoritos
-                      <Like />
-                    </>
-                }
-              </Button>
+              ? product.isFavorite
+                ? <Button onClick={onClickRemoveFavorite} className='flex justify-center items-center gap-4'>
+                  {
+                    loadingFavorite
+                      ? <Loader color='white' />
+                      : <>
+                        Eliminar de favoritos
+                        <Delete />
+                      </>
+                  }
+                </Button>
+                : <Button onClick={onClickAddFavorite} className='flex justify-center items-center gap-4'>
+                  {
+                    loadingFavorite
+                      ? <Loader color='white' />
+                      : <>
+                        Agregar a favoritos
+                        <Like />
+                      </>
+                  }
+                </Button>
               : <></>
           }
-
         </div>
       </div>
       <div className='bg-primary w-[1024px] h-[2px] rounded-full'>
@@ -176,7 +178,7 @@ function ProductDetailsLayout({ product }) {
         }
         {
           comments.length === 0
-            ? <p className='text-center'>El articulo no tiene comentarios</p>
+            ? <p className='text-center'>El producto no tiene comentarios</p>
             : <div className='bg-white px-4 py-2 flex flex-col justify-center items-center gap-4 '>
               {
                 comments.map((c, i) => <CommentCard key={i} comment={c} />)
@@ -192,24 +194,73 @@ function ProductDetails() {
 
   const [product, setProduct] = useState({})
   const [loanding, setLoading] = useState(true)
+  const [loadingFavorite, setLoadingFavorite] = useState(false)
   const [error, setError] = useState(false)
 
   const { id } = useParams()
+  const user = useUser()
+
+  async function addFavorite() {
+    setLoadingFavorite(true)
+    try {
+      const data = await ClientService.postFavorite(user.id, product.id)
+      toast('Se agrego a favoritos', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        theme: "light"
+      });
+      console.log(data)
+      setProduct(data)
+    } catch (e) {
+      console.log(e)
+    }
+    setLoadingFavorite(false)
+  }
+
+  async function removeFavorite() {
+    setLoadingFavorite(true)
+    try {
+      const data = await ClientService.deleteFavorite(user.id, product.id)
+      toast('Se elimino de favoritos', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        theme: "light"
+      });
+      setProduct(data)
+    } catch (e) {
+      console.log(e)
+    }
+    setLoadingFavorite(false)
+  }
 
   useEffect(() => {
     async function getProductById() {
       setLoading(true)
       try {
-        const response = await ProductService.getProductByIdRequest(id)
-        setProduct(response)
+        if (user.isClient()) {
+          const data = await ProductService.getProductByIdRequest(id, { clientId: user.id })
+          setProduct(data)
+        } else {
+          const data = await ProductService.getProductByIdRequest(id)
+          setProduct(data)
+        }
       } catch (e) {
         console.log(e)
         setError(true)
       }
+
       setLoading(false)
     }
     getProductById()
-  }, [id])
+  }, [user.id, id])
 
   return (
     <div className='product-details'>
@@ -220,7 +271,7 @@ function ProductDetails() {
           </div>
           : error
             ? <ErrorMessage message='Error de servidor' />
-            : <ProductDetailsLayout product={product} />
+            : <ProductDetailsLayout product={product} onClickAddFavorite={addFavorite} onClickRemoveFavorite={removeFavorite} loadingFavorite={loadingFavorite} />
       }
     </div>
   )

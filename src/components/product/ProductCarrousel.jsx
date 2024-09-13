@@ -1,8 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import ArrowLeft from '../icons/ArrowLeft'
 import ArrowRight from '../icons/ArrowRight'
 
 function ProductCarrousel({ hiddenBtns = false }) {
+
+  const [index, setIndex] = useState(0)
+  const [loader, setLoader] = useState(false)
+  const [direccion, setDireccion] = useState(0)
 
   const right = 1
   const left = -1
@@ -15,9 +19,6 @@ function ProductCarrousel({ hiddenBtns = false }) {
     'basketball.jpg',
     'baseball.jpg'
   ]
-  const [index, setIndex] = useState(0)
-  const [loader, setLoader] = useState(false)
-  const [direccion, setDireccion] = useState(0)
 
   function previous() {
     setLoader(false)
@@ -50,28 +51,31 @@ function ProductCarrousel({ hiddenBtns = false }) {
           next()
         }
       }, 5000)
-
       // clearTimeout(id)
     }
   }, [loader])
 
+  if (hiddenBtns)
+    return (
+      <div className='product-carrousel'>
+        <img
+          src={`imgs/${images[index]}`}
+          alt='Chapy Pengu'
+          className={`${loader ? 'loader' : ''} ${direccion === right ? 'loader-right' : 'loader-left'}`}
+          onLoad={() => setLoader(true)}
+        />
+      </div>
+    )
+
   return (
     <div className='product-carrousel'>
-      {
-        hiddenBtns
-          ? <></>
-          : <button className='left' onClick={previous}>
-            <ArrowLeft />
-          </button>
-      }
+      <button className='left' onClick={previous}>
+        <ArrowLeft />
+      </button>
       <img src={`imgs/${images[index]}`} alt='Chapy Pengu' className={`${loader ? 'loader' : ''} ${direccion === right ? 'loader-right' : 'loader-left'}`} onLoad={() => setLoader(true)} />
-      {
-        hiddenBtns
-          ? <></>
-          : <button className='right' onClick={next}>
-            <ArrowRight />
-          </button>
-      }
+      <button className='right' onClick={next}>
+        <ArrowRight />
+      </button>
     </div>
   )
 }

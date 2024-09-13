@@ -1,4 +1,4 @@
-import Bell from '../icons/Bell'
+import Bell from './icons/Bell'
 
 function Notification({ number }) {
   return (

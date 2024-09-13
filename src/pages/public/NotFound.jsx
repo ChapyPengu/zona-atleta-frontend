@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import Button from '../components/Button'
-import ErrorMessage from '../components/ErrorMessage'
+import Button from '../../components/Button'
+import ErrorMessage from '../../components/ErrorMessage'
 
 function NotFound({ setNavbarActive }) {
 
@@ -13,7 +13,7 @@ function NotFound({ setNavbarActive }) {
   }, [])
 
   return (
-    <div>
+    <div className='py-64'>
       <ErrorMessage message='La pagina no existe' />
       <div className='not-found'>
         <Link to='/home' className='link'>

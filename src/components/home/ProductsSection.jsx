@@ -1,28 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useUser } from '../../contexts/UserContext'
 import { useBuy } from '../../contexts/BuyContext'
 import ShoppingCart from '../icons/ShoppingCart'
 import Utilities from '../../utilities/Utilities'
 import Loader from 'react-spinners/ClipLoader'
-import { useUser } from '../../contexts/UserContext'
 import Previus from '../icons/ArrowLeft'
 import Next from '../icons/ArrowRight'
 import Button from '../Button'
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
 
-const MySwal = withReactContent(Swal)
-
-function ProductCard({ product, auth, disabled }) {
+function ProductCard({ product, auth, disabled, addProduct, buyOne, setNotifications, notifications }) {
 
   const [loadingAdd, setLoadingAdd] = useState(false)
   const [loadingBuy, setLoadingBuy] = useState(false)
   const [hasProduct, setHasProduct] = useState(product.have)
-  const [wantProduct, setWantProduct] = useState(false)
-  
+
   const navigate = useNavigate()
-  const { addProduct, buyOne } = useBuy()
-  const user = useUser()
+
+  const noActive = disabled || loadingAdd || loadingBuy
 
   function handleClick(e) {
     e.stopPropagation()
@@ -44,7 +39,7 @@ function ProductCard({ product, auth, disabled }) {
       await addProduct(product)
       setLoadingAdd(false)
       setHasProduct(true)
-      user.setNotifications(user.notifications + 1)
+      setNotifications(notifications + 1)
     } catch (e) {
       console.log(e)
     }
@@ -69,9 +64,6 @@ function ProductCard({ product, auth, disabled }) {
     }
   }
 
-  useEffect(() => {
-
-  }, [])
 
   return (
     <div className='product-card' onClick={handleClick}>
@@ -84,7 +76,7 @@ function ProductCard({ product, auth, disabled }) {
           <p className='product-card__name'>{product.name}</p>
           <p className='product-card__price'>${Utilities.formatNumberToPrice(product.price)}</p>
         </div>
-        <div className='flex justify-start gap-8'>
+        <div className=''>
           {
             hasProduct
               ? <Link to='/shopping-cart' onClick={e => e.stopPropagation()}>
@@ -93,18 +85,20 @@ function ProductCard({ product, auth, disabled }) {
                 </Button>
               </Link>
               : <div className='flex justify-start gap-4'>
-                <Button className='' title='Comprar' onClick={handleClickBuy} disabled={disabled || loadingAdd || loadingBuy}>
+                <Button className='' title='Comprar' onClick={handleClickBuy} disabled={noActive}>
                   {
                     loadingBuy
                       ? <Loader className='loader-color' color='white' />
                       : 'Comprar'
                   }
                 </Button>
-                <Button variant='outline' className='px-0 py-0' title='Agregar al carrito' onClick={handleClickAdd} disabled={disabled || loadingAdd || loadingBuy}>
+                <Button variant='outline' className='flex justify-center items-center gap-4 hover:*:fill-white' title='Agregar al carrito' onClick={handleClickAdd} disabled={noActive}>
                   {
                     loadingAdd
                       ? <Loader className='loader-color' color='white' />
-                      : <div className='flex items-center gap-4 w-full h-full py-2 px-4'>Agregar al Carrito <ShoppingCart /></div>
+                      : <>
+                        Agregar al Carrito
+                      </>
                   }
                 </Button>
               </div>
@@ -115,55 +109,55 @@ function ProductCard({ product, auth, disabled }) {
   )
 }
 
-function ProductList({ products, auth, disabled }) {
-  return (
-    <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-      {
-        products.map((p, i) => <ProductCard key={i} product={p} auth={auth} disabled={disabled} />)
-      }
-    </div>
-  )
-}
-
-function ProductsSection({ title, loading, products, page, navigate }) {
+function ProductsSection({ title, isLoading, products, page, navigate }) {
 
   const user = useUser()
+  const { addProduct, buyOne } = useBuy()
+
+  const buttonPage = page ? <Button>{page}</Button> : <></>
+
+  function handlePreviousClick() {
+    if (!page) {
+      navigate(`/home/page/${2}`)
+    } else {
+      if (parseInt(page) >= 2) {
+        navigate(`/home/page/${parseInt(page) - 1}`)
+      }
+    }
+  }
+
+  function handleNextClick() {
+    navigate(`/home/page/${!page ? 2 : parseInt(page) + 1}`)
+  }
 
   return (
     <div>
       <div className='flex justify-between items-center'>
         <h1 className="pl-8 my-12 text-3xl uppercase font-black bg-gradient-to-r from-primary  to-[#ff9f1a] inline-block text-transparent bg-clip-text">{title}</h1>
         <div className='flex gap-4'>
-          <Button onClick={() => {
-            if (page === undefined) {
-              navigate(`/home/page/${2}`)
-            } else {
-              if (parseInt(page) >= 2) {
-                navigate(`/home/page/${parseInt(page) - 1}`)
-              }
-            }
-          }}>
+          <Button onClick={handlePreviousClick}>
             <Previus className='fill-white' />
           </Button>
-          {
-            page !== undefined
-              ? <Button>
-                {page}
-              </Button>
-              : <></>
-          }
-          <Button onClick={() => {
-            if (page === undefined) {
-              navigate(`/home/page/${2}`)
-            } else {
-              navigate(`/home/page/${parseInt(page) + 1}`)
-            }
-          }}>
+          {buttonPage}
+          <Button onClick={handleNextClick}>
             <Next className='fill-white' />
           </Button>
         </div>
       </div>
-      <ProductList products={products} auth={!user.isNone()} disabled={user.isSalesManager()}/>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+        {
+          products.map((p, i) => <ProductCard
+            key={i}
+            product={p}
+            auth={!user.isNone()}
+            disabled={user.isSalesManager()}
+            addProduct={addProduct}
+            buyOne={buyOne}
+            notifications={user.notifications}
+            setNotifications={user.setNotifications}
+          />)
+        }
+      </div>
     </div>
   )
 }
