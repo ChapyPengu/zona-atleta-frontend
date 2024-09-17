@@ -37,15 +37,15 @@ function Header() {
         autoPlaySpeed={2000}
         customTransition='all 1s'
         transitionDuration={750}
-        containerClass='carousel-container h-32'
+        containerClass='carousel-container h-8'
         dotListClass='custom-dot-list-style'
         arrows={false}
-        itemClass='carousel-item-padding-40-px.3'
+        itemClass='carousel-item-padding-40-px'
         className=''
       >
 
         {
-          topImages.map((image, i) => <img key={i} className='h-32 object-cover' src={image} />)
+          topImages.map((image, i) => <img key={i} className='h-8 object-cover md:auto ' src={image} />)
         }
       </Carousel>
       <Carousel
@@ -57,16 +57,16 @@ function Header() {
         autoPlaySpeed={1000}
         customTransition='all 1s'
         transitionDuration={1000}
-        containerClass='carousel-container h-64'
+        containerClass='carousel-container h-64 md:0'
         dotListClass='custom-dot-list-style'
         arrows={false}
         showDots={true}
-        itemClass='carousel-item-padding-40-px.3'
+        itemClass='carousel-item-padding-40-px'
         className=''
       >
 
         {
-          images.map((image, i) => <img key={i} className='h-64 object-cover' src={image} />)
+          images.map((image, i) => <img key={i} className='h-64 object-cover md:auto ' src={image} />)
         }
       </Carousel>
       <Carousel
@@ -78,16 +78,16 @@ function Header() {
         autoPlaySpeed={5000}
         customTransition='all 1s'
         transitionDuration={1000}
-        containerClass='carousel-container mt-8'
+        containerClass='carousel-container mt-4 md:mt-8 h-8'
         dotListClass='custom-dot-list-style'
         arrows={false}
         showDots={true}
-        itemClass='carousel-item-padding-40-px.3'
+        itemClass='carousel-item-padding-40-px'
         className=''
       >
 
         {
-          bottomImages.map((image, i) => <img key={i} className='h-32 object-cover' src={image} />)
+          bottomImages.map((image, i) => <img key={i} className='h-8 object-cover md:auto ' src={image} />)
         }
       </Carousel>
     </header>

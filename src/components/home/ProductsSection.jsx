@@ -149,8 +149,8 @@ function ProductsSection({ title, isLoading, products, page, navigate }) {
         isLoading
           ? <Loader />
           : products.length === 0
-            ? <div className='flex justify-center'>
-              <p className='text-xl text-primary font-semibold bg-blue-900'>No se encontraron productos</p>
+            ? <div className='flex justify-center mt-8 md:mt-0'>
+              <p className='text-xl text-primary font-semibold text-center'>No se encontraron productos</p>
             </div>
             : <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
               {

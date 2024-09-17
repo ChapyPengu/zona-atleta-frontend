@@ -42,7 +42,7 @@ function SectionCarrousel({ title, isLoading, amount = 5, children }) {
             ? <SectionCarrouselLoader />
             : children.length === 0
               ? <div className='min-h-64 flex justify-center items-center'>
-                <p className='text-xl font-semibold text-primary'>No hay {title.toLowerCase()} disponibles</p>
+                <p className='text-xl font-semibold text-primary text-center'>No hay {title.toLowerCase()} disponibles</p>
               </div>
               : <Carousel
                 swipeable={false}
