@@ -1,7 +1,10 @@
 import { useState, useEffect, createContext, useContext } from 'react'
 import { useApp } from './AppContext'
 import AuthService from '../services/AuthService'
+import SocialService from '../services/SocialService'
 import Cookies from 'js-cookie'
+import OrderMessageService from '../services/OrderMessageService'
+import ProductService from '../services/ProductService'
 
 const PROFILES = {
   CLIENT: {
@@ -27,7 +30,7 @@ export function UserContextProvider({ children }) {
 
   const [id, setId] = useState(0)
   const [username, setUsername] = useState('')
-  const [notifications, setNotifications] = useState(0)
+  const [notifications, setNotifications] = useState([])
   const [profile, setProfile] = useState({})
   const [loading, setLoading] = useState(true)
 
@@ -67,7 +70,7 @@ export function UserContextProvider({ children }) {
     setUser(user)
     localStorage.setItem('token', JSON.stringify(user))
   }
-  
+
 
   async function loginSalesManager({ username, password }) {
     const user = await AuthService.postLoginSalesManagerRequest({ username, password })
@@ -75,10 +78,15 @@ export function UserContextProvider({ children }) {
     localStorage.setItem('token', JSON.stringify(user))
   }
 
-  async function googleLogin(credentials) {
-    const user = await AuthService.postGoogleLoginRequest(credentials)
+  async function googleLogin(token) {
+    const profile = await SocialService.googleProfile(token)
+    const user = await SocialService.googleLogin({ username: profile.name, email: profile.email })
     setUser(user)
     localStorage.setItem('token', JSON.stringify(user))
+  }
+
+  async function validateRegister({ username, email, password }) {
+    const data = await AuthService.postValidateRegisterRequest({ username, email, password })
   }
 
   async function register({ username, email, password }) {
@@ -99,6 +107,21 @@ export function UserContextProvider({ children }) {
     localStorage.removeItem('token')
   }
 
+  async function createVerifyCode() {
+    const response = await AuthService.postCreateVerifyCodeRequest()
+    return response
+  }
+
+  async function validateVerifyCode({ code }) {
+    const response = await AuthService.postValidateVerifyCodeRequest({ code })
+    return response
+  }
+
+  async function sendEmailVerifyCode({ email }) {
+    const response = await AuthService.postSendEmailVerifyCodeRequest({ email })
+    return response
+  }
+
   async function verify() {
     setLoading(true)
     // const cookies = Cookies.get()
@@ -114,6 +137,17 @@ export function UserContextProvider({ children }) {
       const user = token
       setUser(user)
       // socket.emit('auth', res)
+      console.log(user)
+      if (user.profile.id === PROFILES.SALES_MANAGER.id) {
+        const notifys = await OrderMessageService.getNotifys()
+        const comments = await ProductService.getCommentNotView()
+        setNotifications([...notifys, ...comments])
+      } else {
+        const notifys = await OrderMessageService.getNotifysClient(user.id)
+        const comments = await ProductService.getResponseNotView({ clientId: user.id })
+        setNotifications([...notifys, ...comments])
+      }
+
     } catch (e) {
       console.log(e)
     }
@@ -122,6 +156,20 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     verify()
+    if (notifications !== 0) {
+      document.title = `(${notifications}) Zona Atleta`
+    }
+    socket.on('notification', async () => {
+      console.log('Recibi una notificacion')
+      // setNotifications(notifications + 1)
+      // if (notifications <= 0) {
+      // document.title = `(${notifications + 1}) Zona Atleta`
+      // }
+      // const noti = new Audio('/sounds/notification.mp3')
+      // noti.play()
+    })
+
+
   }, [])
 
   return (
@@ -134,11 +182,16 @@ export function UserContextProvider({ children }) {
       isSalesManager,
       login,
       loginSalesManager,
+      googleLogin,
       register,
       registerSalesManager,
       logout,
       notifications,
-      setNotifications
+      setNotifications,
+      validateRegister,
+      createVerifyCode,
+      validateVerifyCode,
+      sendEmailVerifyCode
     }}>
       {children}
     </UserContext.Provider>

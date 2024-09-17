@@ -110,6 +110,11 @@ class ClientService {
     const response = await axios.get(`/api/client/${id}/notifications`)
     return response.data
   }
+
+  static async sendEmailsDiscountRequest() {
+    const response = await axios.post(`/api/client/send-email/discount`)
+    return response.data
+  }
 }
 
 export default ClientService

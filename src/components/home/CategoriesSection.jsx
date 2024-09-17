@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import Carousel from 'react-multi-carousel'
+import Subtitle from '../Subtitle'
 
 const responsive = {
   superLargeDesktop: {
@@ -16,7 +17,7 @@ const responsive = {
   },
   mobile: {
     breakpoint: { max: 464, min: 0 },
-    items: 6
+    items: 1
   }
 }
 
@@ -27,7 +28,7 @@ function CategoriesSection({ title }) {
   return (
     <div >
       <div className="grid place-items-center">
-        <h1 className="pl-8 my-8 text-3xl uppercase font-black bg-gradient-to-r from-primary  to-[#ff9f1a] inline-block text-transparent bg-clip-text text-center">{title}</h1>
+        <Subtitle>{title}</Subtitle>
       </div>
       <Carousel
         swipeable={false}

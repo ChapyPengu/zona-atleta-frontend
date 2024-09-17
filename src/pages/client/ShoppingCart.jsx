@@ -21,7 +21,7 @@ function ShoppinCartVoid() {
 
 function ShoppingCartDetails({ products, buy }) {
 
-  const total = products.reduce((acum, p) => acum + p.price, 0)
+  const [total, setTotal] = useState(products.reduce((acum, p) => acum + (p.price, p.amount), 0))
 
   async function handleClick() {
     try {
@@ -30,6 +30,11 @@ function ShoppingCartDetails({ products, buy }) {
       console.log(e)
     }
   }
+
+  useEffect(() => {
+    console.log(products)
+    setTotal(products.reduce((acum, p) => acum + (p.price * p.amount), 0))
+  }, [products])
 
   return (
     <div className='py-8 text-center flex justify-center items-start'>

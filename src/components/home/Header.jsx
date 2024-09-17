@@ -37,12 +37,15 @@ function Header() {
         autoPlaySpeed={2000}
         customTransition='all 1s'
         transitionDuration={750}
-        containerClass='carousel-container'
+        containerClass='carousel-container h-32'
         dotListClass='custom-dot-list-style'
         arrows={false}
-        itemClass='carousel-item-padding-40-px'>
+        itemClass='carousel-item-padding-40-px.3'
+        className=''
+      >
+
         {
-          topImages.map((image, i) => <img key={i} className='' src={image} />)
+          topImages.map((image, i) => <img key={i} className='h-32 object-cover' src={image} />)
         }
       </Carousel>
       <Carousel
@@ -54,13 +57,16 @@ function Header() {
         autoPlaySpeed={1000}
         customTransition='all 1s'
         transitionDuration={1000}
-        containerClass='carousel-container'
+        containerClass='carousel-container h-64'
         dotListClass='custom-dot-list-style'
         arrows={false}
         showDots={true}
-        itemClass='carousel-item-padding-40-px'>
+        itemClass='carousel-item-padding-40-px.3'
+        className=''
+      >
+
         {
-          images.map((image, i) => <img key={i} className='' src={image} />)
+          images.map((image, i) => <img key={i} className='h-64 object-cover' src={image} />)
         }
       </Carousel>
       <Carousel
@@ -76,9 +82,12 @@ function Header() {
         dotListClass='custom-dot-list-style'
         arrows={false}
         showDots={true}
-        itemClass='carousel-item-padding-40-px'>
+        itemClass='carousel-item-padding-40-px.3'
+        className=''
+      >
+
         {
-          bottomImages.map((image, i) => <img key={i} className='' src={image} />)
+          bottomImages.map((image, i) => <img key={i} className='h-32 object-cover' src={image} />)
         }
       </Carousel>
     </header>

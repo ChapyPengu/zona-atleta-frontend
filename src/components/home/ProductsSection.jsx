@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useUser } from '../../contexts/UserContext'
 import { useBuy } from '../../contexts/BuyContext'
@@ -8,6 +8,7 @@ import Loader from 'react-spinners/ClipLoader'
 import Previus from '../icons/ArrowLeft'
 import Next from '../icons/ArrowRight'
 import Button from '../Button'
+import Subtitle from '../Subtitle'
 
 function ProductCard({ product, auth, disabled, addProduct, buyOne, setNotifications, notifications }) {
 
@@ -132,8 +133,8 @@ function ProductsSection({ title, isLoading, products, page, navigate }) {
 
   return (
     <div>
-      <div className='flex justify-between items-center'>
-        <h1 className="pl-8 my-12 text-3xl uppercase font-black bg-gradient-to-r from-primary  to-[#ff9f1a] inline-block text-transparent bg-clip-text">{title}</h1>
+      <div className='flex justify-between items-center flex-col md:flex-row gap-4'>
+        <Subtitle>{title}</Subtitle>
         <div className='flex gap-4'>
           <Button onClick={handlePreviousClick}>
             <Previus className='fill-white' />
@@ -144,20 +145,28 @@ function ProductsSection({ title, isLoading, products, page, navigate }) {
           </Button>
         </div>
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
-        {
-          products.map((p, i) => <ProductCard
-            key={i}
-            product={p}
-            auth={!user.isNone()}
-            disabled={user.isSalesManager()}
-            addProduct={addProduct}
-            buyOne={buyOne}
-            notifications={user.notifications}
-            setNotifications={user.setNotifications}
-          />)
-        }
-      </div>
+      {
+        isLoading
+          ? <Loader />
+          : products.length === 0
+            ? <div className='flex justify-center'>
+              <p className='text-xl text-primary font-semibold bg-blue-900'>No se encontraron productos</p>
+            </div>
+            : <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+              {
+                products.map((p, i) => <ProductCard
+                  key={i}
+                  product={p}
+                  auth={!user.isNone()}
+                  disabled={user.isSalesManager()}
+                  addProduct={addProduct}
+                  buyOne={buyOne}
+                  notifications={user.notifications}
+                  setNotifications={user.setNotifications}
+                />)
+              }
+            </div>
+      }
     </div>
   )
 }

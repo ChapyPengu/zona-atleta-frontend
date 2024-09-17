@@ -92,25 +92,11 @@ const SALES_MANAGER_OPTIONS = [
 
 function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, logout, search, setSearch }) {
 
-  const [notifications, setNotifications] = useState([])
-
   const navigate = useNavigate()
 
   const user = useUser()
+  
   const { products } = useBuy()
-
-  useEffect(() => {
-    async function getNotifications() {
-      if (user.isClient()) {
-        try {
-          const data = await ClientService.getNotifications(user.id)
-          console.log(data)
-        } catch (e) {
-          console.log(e)
-        }
-      }
-    }
-  }, [])
 
   return (
     <div className='navbar-content'>
@@ -122,12 +108,11 @@ function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, l
         search
           ? <ProductFilterName value={inputValue} onChange={inputOnChange} />
           : <div className='flex gap-4 font-bold'>
-            <Link to='/product/?type=category' className='capitalize hover:underline cursor-pointer'>categorias</Link>
-            <Link to='/product/?type=mujer' className='capitalize hover:underline cursor-pointer'>mujer</Link>
-            <Link to='/product/?type=hombre' className='capitalize hover:underline cursor-pointer'>hombre</Link>
-            <Link to='/product/?type=kid' className='capitalize hover:underline cursor-pointer'>kid</Link>
-            <Link to='/product/?type=marcas' className='capitalize hover:underline cursor-pointer'>marcas</Link>
-            <Link to='/product/?type=zapatillas' className='capitalize hover:underline cursor-pointer'>zapatillas</Link>
+            <Link to='/product' className='capitalize hover:underline cursor-pointer'>articulos</Link>
+            <p className='capitalize hover:underline cursor-pointer'>categorias</p>
+            <Link to='/product/?gender=woman' className='capitalize hover:underline cursor-pointer'>mujer</Link>
+            <Link to='/product/?gender=man' className='capitalize hover:underline cursor-pointer'>hombre</Link>
+            <Link to='/product/?gender=kid' className='capitalize hover:underline cursor-pointer'>kid</Link>
           </div>
       }
       <div>
@@ -167,17 +152,21 @@ function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, l
               }
             </div>
           </div>
-          {/* <div className='navbar-content__icon'>
-          <button className='navbar-content-btn-icon navbar-account notification'>
-            <Bell className='navbar-content-icon' />
-            <p className='notification-number'>1</p>
-          </button>
-          <div className='navbar-content__menu navbar-content__menu-2'>
-            {
-              notifications.map((n, i) => <p key={i} className='link navbar-content__menu-item'>{n.message}</p>)
-            }
+          <div className='navbar-content__icon'>
+            <button className='navbar-content-btn-icon navbar-account notification'>
+              <Bell className='navbar-content-icon' />
+              {
+                user.notifications.length !== 0
+                  ? <p className='notification-number'>{user.notifications.length}</p>
+                  : <></>
+              }
+            </button>
+            <div className='navbar-content__menu navbar-content__menu-2'>
+              {
+                user.notifications.map((n, i) => <p key={i} className='link navbar-content__menu-item'>{n.message}</p>)
+              }
+            </div>
           </div>
-        </div> */}
           {
             links.map((item, i) => {
               if (item.name === 'Carrito de Compras') {

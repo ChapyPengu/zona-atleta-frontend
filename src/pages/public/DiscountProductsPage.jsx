@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
-import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useBuy } from '../../contexts/BuyContext'
 import { useUser } from '../../contexts/UserContext'
 import ProductService from '../../services/ProductService'
@@ -93,68 +93,27 @@ function ProductCard({ product }) {
   )
 }
 
-function Product() {
+function DiscountProductsPage() {
 
   const [products, setProducts] = useState([])
-  const [nameValue, setNameValue] = useState('')
-  const [categoryValue, setCategoryValue] = useState('')
-  const [genderValue, setGenderValue] = useState('')
-
-  const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-    async function getProducts() {
+    async function getDiscountProductsRequest() {
       try {
-        let name = searchParams.get('name')
-        let category = searchParams.get('category')
-        let gender = searchParams.get('gender')
-        if (name === null) {
-          name = undefined
-          setNameValue('')
-        } else {
-          setNameValue(name)
-        }
-        if (category === null) {
-          category = undefined
-          setCategoryValue('')
-        } else {
-          setCategoryValue(category)
-        }
-        if (gender === null) {
-          gender = undefined
-          setGenderValue('')
-        } else {
-          setGenderValue(gender)
-        }
-        const data = await ProductService.getProductsRequest(0, 20, { name, category, gender })
-        console.log(data.results)
+        const data = await ProductService.getDiscounts(0, 20)
+        console.log(data)
         setProducts(data.results)
       } catch (e) {
         console.log(e)
       }
     }
-    getProducts()
-  }, [searchParams])
+    getDiscountProductsRequest()
+  }, [])
 
   return (
     <div className='max-w-[1536px] mx-auto py-32'>
       <div>
         <p className='text-primary text-4xl font-bold pl-8 uppercase my-8'>resultados para</p>
-        {
-          nameValue
-            ? <p className='text-gray-900/80 text-xl font-medium pl-8 my-2'>Nombre: <span className='italic font-bold'>{nameValue}</span></p>
-            : <></>
-        }
-        {
-          categoryValue
-            ? <p className='text-gray-900/80 text-xl font-medium pl-8 my-2'>Categoria: <span className='italic font-bold'>{categoryValue}</span></p>
-            : <></>
-        }
-        {
-          genderValue
-            ? <p className='text-gray-900/80 text-xl font-medium pl-8 my-2'>Genero: <span className='italic font-bold'>{genderValue}</span></p>
-            : <></>
-        }
       </div>
       <div>
         {
@@ -171,4 +130,4 @@ function Product() {
   )
 }
 
-export default Product
+export default DiscountProductsPage

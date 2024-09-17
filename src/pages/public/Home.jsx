@@ -34,7 +34,7 @@ function Home() {
     async function getProducts() {
       setLoadingProducts(true)
       try {
-        const data = await ProductService.getProducts(offset, limit)
+        const data = await ProductService.getProductsRequest(offset, limit)
         setProducts(data.results.map(p => ({ ...p, have: haveProduct(p) })))
       } catch (e) {
         console.log(e)

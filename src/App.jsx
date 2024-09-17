@@ -23,24 +23,28 @@ import LayoutApp from './layouts/LayoutApp';
 import Chatbot from './components/Chatbot'
 import Footer from './components/Footer'
 import Navbar from './components/Navbar'
+import { useUser } from './contexts/UserContext';
+import DiscountProductsPage from './pages/public/DiscountProductsPage'
 
 function App() {
 
   const [navbarActive, setNavbarActive] = useState(true)
   const [name, setName] = useState('')
   const location = useLocation()
+  const user = useUser()
 
   useLayoutEffect(() => {
     document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-    // const noti = new Audio('/sounds/notification.mp3')
-    // noti.play()
-    // document.title = `${name}`
   }, [location.pathname])
 
   return (
     <>
       <Navbar active={navbarActive} inputValue={name} inputOnChange={(e) => setName(e.target.value)} />
-      <Chatbot />
+      {
+        user.isSalesManager()
+          ? < Chatbot />
+          : <></>
+      }
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -59,14 +63,15 @@ function App() {
           <Route path='/' element={<Navigate to='/home' />} />
           <Route path='/home' element={<Home />} />
           <Route path='/home/page/:page' element={<Home />} />
-          <Route path='/' element={<Product />} />
+          <Route path='/product' element={<Product />} />
           <Route path='/product/:id' element={<ProductDetails />} />
+          <Route path='/product/from/discount' element={<DiscountProductsPage />} />
+          <Route path='/order/:id' element={<OrderDetails />} />
           <Route element={<ProtectedNotAuth />}>
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
           </Route>
           <Route element={<ProtectedAuth />}>
-            <Route path='/order/:id' element={<OrderDetails />} />
             <Route element={<ProtectedClient />}>
               <Route path='/shopping-cart' element={<ShoppingCart />} />
               <Route path='/favorites' element={<Favorites />} />

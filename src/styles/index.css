@@ -58,6 +58,12 @@ body {
     gap: 1rem;
 }
 
+@media (width < 600px) {
+    .logo {
+        font-size: 1.25rem;
+    }
+}
+
 .logo-icon {
     width: 1.5rem;
     height: 1.5rem;

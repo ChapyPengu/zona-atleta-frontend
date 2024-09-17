@@ -8,21 +8,29 @@ function Input({
   type = 'text',
   icon = <></>,
   disabled = false,
-  reff
+  reff,
+  label = true,
+  autoComplete = true
 }) {
   return (
     <div className={className}>
       <div className="flex gap-8">
-        <label
-          className={`block text-gray-700 font-bold mb-2 ${error ? 'text-red-500' : ''}`} htmlFor={placeholder}
-        >
-          {placeholder}
-          {
-            error
-              ? ' *'
-              : ''
-          }
-        </label>
+        {
+          label
+            ? <>
+              <label
+                className={`block text-gray-700 font-bold mb-2 ${error ? 'text-red-500' : ''}`} htmlFor={placeholder}
+              >
+                {placeholder}
+                {
+                  error
+                    ? ' *'
+                    : ''
+                }
+              </label>
+            </>
+            : <></>
+        }
       </div>
       <div className="relative">
         {
@@ -35,6 +43,7 @@ function Input({
               type={type}
               placeholder={placeholder}
               disabled={disabled}
+              autoComplete={autoComplete ? 'on' : 'off'}
               ref={reff}
             />
             : <input
@@ -45,6 +54,7 @@ function Input({
               type={type}
               placeholder={placeholder}
               disabled={disabled}
+              autoComplete={autoComplete ? 'on' : 'off'}
             />
         }
 

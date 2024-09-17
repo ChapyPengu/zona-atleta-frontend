@@ -25,6 +25,15 @@ class AuthService {
     return response.data
   }
 
+  static async postValidateRegisterRequest({ username, email, password }) {
+    const response = await axios.post('/api/auth/validate-register', {
+      username,
+      email,
+      password
+    })
+    return response.data
+  }
+
   static async postRegisterRequest({ username, email, password }) {
     const response = await axios.post('/api/auth/register', {
       username,
@@ -49,6 +58,25 @@ class AuthService {
 
   static async postVerifyRequest() {
     const response = await axios.post('/api/auth/verify')
+    return response.data
+  }
+
+  static async postCreateVerifyCodeRequest() {
+    const response = await axios.post('/api/auth/create-verify-token')
+    return response.data
+  }
+
+  static async postValidateVerifyCodeRequest({ code }) {
+    const response = await axios.post('/api/auth/create-verify-token', {
+      code
+    })
+    return response.data
+  }
+
+  static async postSendEmailVerifyCodeRequest({ email }) {
+    const response = await axios.post('/api/auth/send-email-verification', {
+      email
+    })
     return response.data
   }
 }

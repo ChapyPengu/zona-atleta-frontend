@@ -2,13 +2,23 @@ import axios from './intance/instance'
 
 class ProductService {
 
-  static async getProductsRequest() {
-    const response = await axios.get('/api/product')
+  static async getProductsRequest(offset, limit, { name, category, gender } = {}) {
+    let query = `/api/product?offset=${offset}&limit=${limit}`
+    if (name) {
+      query += `&name=${name}`
+    }
+    if (category) {
+      query += `&category=${category}`
+    }
+    if (gender) {
+      query += `&gender=${gender}`
+    }
+    const response = await axios.get(query)
     return response.data
   }
 
   static async getProductByIdRequest(id, { clientId } = {}) {
-    const response = await axios.post(`/api/product/${id}`, {
+    const response = await axios.get(`/api/product/${id}`, {
       clientId,
     })
     return response.data
@@ -19,9 +29,10 @@ class ProductService {
     return response.data
   }
 
-  static async postComment(id, message) {
-    const comment = await axios.post(`/api/product/${id}/comment`, {
-      message
+  static async postComment({ clientId, productId, message }) {
+    const comment = await axios.post(`/api/product/${productId}/comment`, {
+      message,
+      clientId
     })
     return comment.data
   }
@@ -31,21 +42,6 @@ class ProductService {
       commentId,
       message
     })
-    return response.data
-  }
-
-  static async getProductsByCategory(name) {
-    const response = await axios.get(`/api/product/category/${name}`)
-    return response.data
-  }
-
-  static async getProductsByName(name) {
-    const response = await axios.get(`/api/product/name/${name}`)
-    return response.data
-  }
-
-  static async getProducts(offset, limit) {
-    const response = await axios.get(`/api/product?offset=${offset}&limit=${limit}`)
     return response.data
   }
 
@@ -72,6 +68,27 @@ class ProductService {
       stock,
       available
     })
+    return response.data
+  }
+
+  static async getCommentNotView() {
+    const response = await axios.get('/api/product/get/comment')
+    return response.data
+  }
+
+  static async getResponseNotView({ clientId }) {
+    const response = await axios.get(`/api/product/${clientId}/response`)
+    return response.data
+  }
+
+  static async putCommentView({ commentId }) {
+    const response = await axios.put(`/api/product/${commentId}/comment`)
+    console.log(response.data)
+    return response.data
+  }
+
+  static async putResponseView({ clientId }) {
+    const response = await axios.put(`/api/product/${clientId}/response`)
     return response.data
   }
 }

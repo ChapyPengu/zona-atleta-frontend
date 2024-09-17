@@ -20,7 +20,7 @@ function ResponseCard({ response }) {
   )
 }
 
-function CommentCard({ comment }) {
+function CommentCard({ comment, handle = async () => {} }) {
 
   const [response, setResponse] = useState(comment.response)
   const [currentResponse, setCurrentResponse] = useState('')
@@ -37,6 +37,8 @@ function CommentCard({ comment }) {
       setResponse(data)
       setCurrentResponse('')
       console.log(data)
+      await handle()
+      console.log('Se actualizo el visto')
     } catch (e) {
       setResponse(responseBefore)
       setCurrentResponse(currentResponseBefore)
@@ -47,6 +49,7 @@ function CommentCard({ comment }) {
   function handleChange(e) {
     setCurrentResponse(e.target.value)
   }
+
 
   return (
     <div>
@@ -86,8 +89,8 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
     try {
       setComments([...comments, { message: comment }])
       setComment('')
-      const data = await ProductService.postComment(product.id, comment)
-      setComment([...beforeComment, data])
+      const data = await ProductService.postComment({ clientId: user.id, productId: product.id, message: comment })
+      setComment('')
       console.log(data)
     } catch (e) {
       setComments(beforeComments)
@@ -95,6 +98,24 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
       console.log(e)
     }
   }
+
+  function getHandlePutViewComment(commentId) {
+    return async () => {
+      const res = await ProductService.putCommentView({ commentId })
+      console.log(res)
+    }
+  }
+
+  useEffect(() => {
+    async function putResponseView() {
+      if (!user.isSalesManager()) {
+        console.log('me ejecuto')
+        const res = await ProductService.putResponseView({ clientId: user.id })
+        console.log(res)
+      }
+    }
+    putResponseView()
+  }, [])
 
   return (
     <div className='flex justify-center items-center flex-col py-16 gap-8'>
@@ -181,7 +202,7 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
             ? <p className='text-center'>El producto no tiene comentarios</p>
             : <div className='bg-white px-4 py-2 flex flex-col justify-center items-center gap-4 '>
               {
-                comments.map((c, i) => <CommentCard key={i} comment={c} />)
+                comments.map((c, i) => <CommentCard key={i} comment={c} handle={getHandlePutViewComment(c.id)} />)
               }
             </div>
         }

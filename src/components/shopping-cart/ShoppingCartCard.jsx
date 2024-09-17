@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useBuy } from '../../contexts/BuyContext'
 import Loader from 'react-spinners/ClipLoader'
 import Delete from '../icons/Delete'
@@ -17,17 +17,13 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
 
   const [loadingDelete, setLoadingDelete] = useState(false)
   const [loadingEdit, setLoadingEdit] = useState(false)
-  const [edit, setEdit] = useState(false)
 
   const totalPrice = product.price * product.amount
 
   const { deleteProduct, editProduct, products, setProducts } = useBuy()
 
   const waitOperation = loadingDelete || loadingEdit
-  
-  function handleClickEdit() {
-    setEdit(!edit)
-  }
+
   async function handleClickEditMinus() {
     setLoadingEdit(true)
     await editProduct(product, { amount: product.amount - 1 })
@@ -51,6 +47,8 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
     setLoadingDelete(false)
   }
 
+
+
   return (
     <div className='w-full flex gap-8'>
       <div className='flex flex-col gap-4'>
@@ -66,45 +64,33 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
           <p className='text-lg font-bold'>Total: ${formatearNumeroConPuntos(totalPrice)}</p>
         </div>
         <div className='flex justify-center gap-4 w-full'>
-          {
-            edit
-              ? (
-                <div className='flex gap-4 bg-primary py-2 px-4 rounded-full'>
-                  <button disabled={waitOperation} className='' onClick={handleClickEditMinus}>
-                    {
-                      loadingEdit
-                        ? <Loader color='white' />
-                        : <Minus className='fill-white' />
-                    }
-                  </button>
-                  <button disabled={waitOperation} className='text-white font-black' onClick={handleClickEdit}>
-                    {product.amount}
-                  </button>
-                  <button disabled={waitOperation} className='' onClick={handleClickEditAdd}>
-                    {
-                      loadingEdit
-                        ? <Loader color='white' />
-                        : <Plus className='fill-white' />
-                    }
-                  </button>
-                </div>
-              )
-              : <Button disabled={waitOperation} className='' onClick={handleClickEdit}>
-                <Edit className='' />
-              </Button>
-          }
-          {
-            edit
-              ? <></>
-              : <Button disabled={waitOperation} className='' onClick={handleClickDelete}>
-                {
-                  loadingDelete
-                    ? <Loader color='white' />
-                    : <Delete className='' />
+          <div className='flex gap-4 bg-primary py-2 px-4 rounded-full'>
+            <button disabled={waitOperation} className='' onClick={handleClickEditMinus}>
+              {
+                loadingEdit
+                  ? <Loader color='white' />
+                  : <Minus className='fill-white ' />
+              }
+            </button>
+            <p className='text-white font-semibold'>
+              {product.amount}
+            </p>
+            <button disabled={waitOperation} className='' onClick={handleClickEditAdd}>
+              {
+                loadingEdit
+                  ? <Loader color='white' />
+                  : <Plus className='fill-white ' />
+              }
+            </button>
+          </div>
+          <Button disabled={waitOperation} className='' onClick={handleClickDelete}>
+            {
+              loadingDelete
+                ? <Loader color='white' />
+                : <Delete className='' />
 
-                }
-              </Button>
-          }
+            }
+          </Button>
         </div>
       </div>
     </div>

@@ -40,7 +40,7 @@ function OrderCard({ order, onClick = () => { }, loading }) {
           }
         </section>
         <footer className='flex justify-center'>
-          <Link className='hover:text-primary hover:underline'>Ver detalles del pedido</Link>
+          <Link to={`/order/${order.id}`} className='hover:text-primary hover:underline'>Ver detalles del pedido</Link>
         </footer>
       </div>
     </div>

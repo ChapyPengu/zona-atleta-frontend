@@ -16,16 +16,23 @@ import { Link, useParams } from 'react-router-dom'
 
 const MySwal = withReactContent(Swal)
 
-// const OPTIONS = {
-//   NONE: 1,
-//   PRODUCTS: 2,
-//   ORDERS: 3,
-//   CLIENTS: 4
-// }
-
 function OptionsBar() {
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function handleNotifyDiscount() {
+    setIsLoading(true)
+    try {
+      const data = await ClientService.sendEmailsDiscountRequest()
+      console.log(data)
+    } catch (e) {
+      console.log(e)
+    }
+    setIsLoading(false)
+  }
+
   return (
-    <div className='w-max h-max py-16 px-12 bg-primary text-white shadow-2xl rounded-2xl text-center'>
+    <div className='w-max h-max py-16 px-12 bg-primary text-white shadow-2xl rounded text-center'>
       <h2 className='text-2xl font-bold mb-8'>Opciones</h2>
       <div className='flex flex-col gap-8'>
         <div className='border-b-2 border-white pb-2 '>
@@ -46,6 +53,16 @@ function OptionsBar() {
             className='text-xl font-semibold cursor-pointer hover:text-gray-700'
           >Clientes</Link>
         </div>
+        <button
+          className='bg-white text-primary font-bold rounded px-4 py-2 border-2 border-transparent transition-all hover:text-white hover:bg-primary hover:border-white'
+          onClick={handleNotifyDiscount}
+        >
+          {
+            isLoading
+              ? <Loader />
+              : 'Notificar descuentos'
+          }
+        </button>
       </div>
     </div>
   )
@@ -129,7 +146,7 @@ function OptionProducts() {
     async function getProducts() {
       setLoading(true)
       try {
-        const res = await ProductService.getProducts()
+        const res = await ProductService.getProductsRequest()
         setProducts(res.results)
         setPrevious(res.previous)
         setNext(res.next)
@@ -382,7 +399,7 @@ function OptionClients() {
             ? <div className='flex justify-center items-center text-primary text-xl font-medium py-8'>
               <p>No se encontraron clientes</p>
             </div>
-            : <div className='grid grid-cols-4 gap-4'>
+            : <div className='flex flex-col gap-4'>
               {
                 clients.map((c, i) => <ClientCard key={i} client={c} />)
               }
