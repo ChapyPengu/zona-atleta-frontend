@@ -9,7 +9,7 @@ function ProductFilterName({ value, onChange }) {
     <form className='searchbar' onSubmit={(e) => {
       e.preventDefault()
       console.log(value)
-      navigate(`/name/${value}`)
+      navigate(`/product?name=${value}`)
     }}>
       <input className='searchbar__input' value={value} type='text' onChange={onChange} placeholder='Buscar productos' />
       <Search className='searchbar__icon' />
