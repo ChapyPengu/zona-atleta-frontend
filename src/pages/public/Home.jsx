@@ -30,6 +30,17 @@ function Home() {
     || (isNaN(page))
     || (parseInt(page) < 2) ? 0 : (parseInt(page) - 1) * limit
 
+  async function handleMoreProducts() {
+    setLoadingProducts(true)
+    try {
+      const data = await ProductService.getProductsRequest(offset + products.length, limit)
+      setProducts([...products, ...data.results.map(p => ({ ...p, have: haveProduct(p) }))])
+    } catch (e) {
+      console.log(e)
+    }
+    setLoadingProducts(false)
+  }
+
   useEffect(() => {
     async function getProducts() {
       setLoadingProducts(true)
@@ -106,7 +117,7 @@ function Home() {
             popularProducts.map((p, i) => <ProductCarrouselCard key={i} product={p} />)
           }
         </SectionCarrousel>
-        <ProductsSection title='Productos' products={products} isLoading={loadingProducts} page={page} navigate={navigate} />
+        <ProductsSection title='Productos' products={products} isLoading={loadingProducts} page={page} navigate={navigate} handleMoreProducts={handleMoreProducts} />
       </LayoutHome>
     </div>
   )

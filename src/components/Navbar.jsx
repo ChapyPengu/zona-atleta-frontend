@@ -92,16 +92,17 @@ const SALES_MANAGER_OPTIONS = [
 
 function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, logout, search, setSearch }) {
 
+  const [showCategories, setShowCategories] = useState(false)
+
   const navigate = useNavigate()
 
   const user = useUser()
-  
+
   const { products } = useBuy()
 
   return (
     <div className='navbar-content'>
       <div className='flex items-center gap-4 justify-center'>
-        {/* <Bars className='bars-icon-navbar' /> */}
         <Logo />
       </div>
       {
@@ -109,7 +110,23 @@ function NavbarBase({ username, userOptions, links, inputValue, inputOnChange, l
           ? <ProductFilterName value={inputValue} onChange={inputOnChange} />
           : <div className='flex gap-4 font-bold'>
             <Link to='/product' className='capitalize hover:underline cursor-pointer'>articulos</Link>
-            <p className='capitalize hover:underline cursor-pointer'>categorias</p>
+            <p
+              className='navbar__categories-item'
+            >
+              <p className='navbar__navbar-item' onClick={() => setShowCategories(!showCategories)}>categorias</p>
+              <div style={{ display: showCategories ? 'grid' : 'none' }}>
+                <ul>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=tenis'>tenis</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=moda'>moda</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=natacion'>natacion</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=running'>running</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=basquet'>basquet</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=futbol'>futbol</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=training'>training</Link></li>
+                  <li><Link onClick={() => setShowCategories(false)} className='navbar__category-link' to='/product?category=hockey'>hockey</Link></li>
+                </ul>
+              </div>
+            </p>
             <Link to='/product/?gender=woman' className='capitalize hover:underline cursor-pointer'>mujer</Link>
             <Link to='/product/?gender=man' className='capitalize hover:underline cursor-pointer'>hombre</Link>
             <Link to='/product/?gender=kid' className='capitalize hover:underline cursor-pointer'>kid</Link>
@@ -221,10 +238,9 @@ function NavbarResponsive({ userOptions, links, inputValue, inputOnChange, searc
           </div>
           : menu
             ? <div className='navbar-responsive__menu'>
-              <p className='link navbar-responsive__item' onClick={() => setSearch(!search)}>Buscar</p>
-              <p className='link navbar-responsive__item' onClick={() => setSearch(!search)}>Usuario</p>
+              <p className='link navbar-responsive__item text-white font-bold' onClick={() => setSearch(!search)}>Buscar</p>
               {
-                links.map((item, i) => <Link key={i} to={item.to} className='link navbar-responsive__item'>{item.name}</Link>)
+                links.map((item, i) => <Link key={i} to={item.to} className='link navbar-responsive__item font-bold text-white'>{item.name}</Link>)
               }
             </div>
             : <></>

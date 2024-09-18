@@ -5,6 +5,7 @@ import SocialService from '../services/SocialService'
 import Cookies from 'js-cookie'
 import OrderMessageService from '../services/OrderMessageService'
 import ProductService from '../services/ProductService'
+import CommentService from '../services/CommentService'
 
 const PROFILES = {
   CLIENT: {
@@ -35,6 +36,10 @@ export function UserContextProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   const { socket } = useApp()
+
+  function addNotification(notification) {
+    setNotifications([...notifications, notification])
+  }
 
   function isLoading() {
     return loading
@@ -136,16 +141,37 @@ export function UserContextProvider({ children }) {
       // const res = await AuthService.postVerifyRequest()
       const user = token
       setUser(user)
-      // socket.emit('auth', res)
-      console.log(user)
+      socket.emit('auth', user)
       if (user.profile.id === PROFILES.SALES_MANAGER.id) {
         const notifys = await OrderMessageService.getNotifys()
-        const comments = await ProductService.getCommentNotView()
+        const comments = await CommentService.getCommentNotView()
+        const total = [...notifys, ...comments]
+        if (total.length !== 0) {
+          document.title = `(${total.length}) Zona Atleta`
+        }
         setNotifications([...notifys, ...comments])
-      } else {
+        socket.on('notification', (comment) => {
+          console.log('Me llego la notificacion')
+          const noti = new Audio('/sounds/notification.mp3')
+          noti.play()
+          document.title = `(${notifications.length}) Zona Atleta`
+          addNotification(comment)
+        })
+      } else if (user.profile.id === PROFILES.CLIENT.id) {
         const notifys = await OrderMessageService.getNotifysClient(user.id)
-        const comments = await ProductService.getResponseNotView({ clientId: user.id })
+        const comments = await CommentService.getResponseNotView({ clientId: user.id })
+        const total = [...notifys, ...comments]
+        if (total.length !== 0) {
+          document.title = `(${total.length}) Zona Atleta`
+        }
         setNotifications([...notifys, ...comments])
+        socket.on('notification', (comment) => {
+          console.log('Me llego la notificacion')
+          const noti = new Audio('/sounds/notification.mp3')
+          noti.play()
+          document.title = `(${notifications.length}) Zona Atleta`
+          addNotification(comment)
+        })
       }
 
     } catch (e) {
@@ -156,21 +182,14 @@ export function UserContextProvider({ children }) {
 
   useEffect(() => {
     verify()
-    if (notifications !== 0) {
-      document.title = `(${notifications}) Zona Atleta`
+    if (notifications.length !== 0) {
+      document.title = `(${notifications.length}) Zona Atleta`
     }
-    socket.on('notification', async () => {
-      console.log('Recibi una notificacion')
-      // setNotifications(notifications + 1)
-      // if (notifications <= 0) {
-      // document.title = `(${notifications + 1}) Zona Atleta`
-      // }
-      // const noti = new Audio('/sounds/notification.mp3')
-      // noti.play()
-    })
-
-
   }, [])
+
+  useEffect(() => {
+    console.log(notifications)
+  }, [notifications])
 
   return (
     <UserContext.Provider value={{

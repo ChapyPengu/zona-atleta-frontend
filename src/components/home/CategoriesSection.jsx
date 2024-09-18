@@ -44,7 +44,7 @@ function CategoriesSection({ title }) {
         itemClass="carousel-item-padding-40-px mx-2"
       >
         {
-          categories.map((category, index) => <Link key={index} to={`/category/${category}`}>
+          categories.map((category, index) => <Link key={index} to={`/product?category=${category}`}>
             <img src={`/sliders/slider-category-${index + 1}.jpg`} />
           </Link>)
         }

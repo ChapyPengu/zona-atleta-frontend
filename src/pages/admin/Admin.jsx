@@ -79,13 +79,20 @@ function OptionProducts() {
   const [next, setNext] = useState(null)
   const [productId, setProductId] = useState(0)
 
-  function handleClickDelete() {
-    MySwal.fire({
-      title: <p>Funcion no disponible</p>,
-      showCloseButton: false,
-      showConfirmButton: false,
-      timer: 2000
-    })
+  function handleClickDelete(p) {
+    // MySwal.fire({
+    //   title: <p>Funcion no disponible</p>,
+    //   showCloseButton: false,
+    //   showConfirmButton: false,
+    //   timer: 2000
+    // })
+    return async () => {
+      try {
+        await ProductService.pauseProduct(p.id)
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 
   function showCreateProduct() {
@@ -187,7 +194,7 @@ function OptionProducts() {
                   </div>
                   : <div className='grid grid-cols-3 gap-4'>
                     {
-                      products.map((p, i) => <ProductCard key={i} product={p} setProductId={setProductId} showEditProduct={showEditProduct} onClickDelete={handleClickDelete} />)
+                      products.map((p, i) => <ProductCard key={i} product={p} setProductId={setProductId} showEditProduct={showEditProduct} onClickPause={handleClickDelete(p)} />)
                     }
                   </div>
             }

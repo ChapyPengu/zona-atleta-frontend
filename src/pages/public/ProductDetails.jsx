@@ -11,16 +11,18 @@ import Like from '../../components/icons/Like'
 import ClientService from '../../services/ClientService'
 import { useBuy } from '../../contexts/BuyContext'
 import Delete from '../../components/icons/Delete'
+import CommentService from '../../services/CommentService'
 
 function ResponseCard({ response }) {
   return (
-    <div>
-      <p>{response.message}</p>
+    <div className='w-full text-end'>
+      <p className='text-primary font-bold'>Respuesta vendedor</p>
+      <p className='text-primary'>{response.message}</p>
     </div>
   )
 }
 
-function CommentCard({ comment, handle = async () => {} }) {
+function CommentCard({ comment, handle = async () => { } }) {
 
   const [response, setResponse] = useState(comment.response)
   const [currentResponse, setCurrentResponse] = useState('')
@@ -33,7 +35,7 @@ function CommentCard({ comment, handle = async () => {} }) {
     try {
       setResponse({ message: currentResponse })
       setCurrentResponse('')
-      const data = await ProductService.postResponse(comment.id, currentResponse)
+      const data = await CommentService.postResponse({ commentId: comment.id, message: currentResponse })
       setResponse(data)
       setCurrentResponse('')
       console.log(data)
@@ -52,9 +54,10 @@ function CommentCard({ comment, handle = async () => {} }) {
 
 
   return (
-    <div>
-      <div>
-        <p>{comment.message}</p>
+    <div className='w-full max-w-[256px] shadow py-2 px-4 '>
+      <div className='mb-2'>
+        <p className='text-gray-800/75 font-bold'>Comentario cliente</p>
+        <p className='text-gray-800/50'>{comment.message}</p>
       </div>
       <div>
         {
@@ -89,7 +92,7 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
     try {
       setComments([...comments, { message: comment }])
       setComment('')
-      const data = await ProductService.postComment({ clientId: user.id, productId: product.id, message: comment })
+      const data = await CommentService.postComment({ clientId: user.id, productId: product.id, message: comment })
       setComment('')
       console.log(data)
     } catch (e) {
@@ -101,7 +104,7 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
 
   function getHandlePutViewComment(commentId) {
     return async () => {
-      const res = await ProductService.putCommentView({ commentId })
+      const res = await CommentService.putCommentView({ commentId })
       console.log(res)
     }
   }
@@ -110,7 +113,7 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
     async function putResponseView() {
       if (!user.isSalesManager()) {
         console.log('me ejecuto')
-        const res = await ProductService.putResponseView({ clientId: user.id })
+        const res = await CommentService.putClientResponses({ clientId: user.id })
         console.log(res)
       }
     }
@@ -118,14 +121,13 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
   }, [])
 
   return (
-    <div className='flex justify-center items-center flex-col py-16 gap-8'>
+    <div className='max-w-[1024px] mx-auto flex justify-center items-center flex-col py-16 gap-8'>
       <div>
-        <p className='product-details__name'>{product.name}</p>
+        <p className='product-details__name text-center'>{product.name}</p>
       </div>
-
-      <div className='flex justify-start items-start gap-8'>
+      <div className='flex flex-col md:flex-row justify-start items-start gap-8'>
         <img className='product-details__img' src={product.image} />
-        <div className='flex flex-col justify-start items-start gap-6'>
+        <div className='w-full md:w-auto flex flex-col justify-center items-center md:justify-start md:items-start gap-6'>
           <p className='text-4xl font-semibold'>${Utilities.formatNumberToPrice(product.price)}</p>
           <div>
             <p className='text-xl font-normal'>Unidades disponibles: {product.stock}</p>
@@ -178,9 +180,17 @@ function ProductDetailsLayout({ product, onClickAddFavorite = () => { }, onClick
                 </Button>
               : <></>
           }
+          {
+            !product.available
+              ? <button className='w-full py-2 px-4 bg-transparent cursor-default block border border-[#f39c12] text-[#f39c12] font-semibold rounded-md'>No disponible</button>
+              : <></>
+          }
+        </div>
+        <div>
+
         </div>
       </div>
-      <div className='bg-primary w-[1024px] h-[2px] rounded-full'>
+      <div className='bg-primary w-full w-max-[1024px] h-[2px] rounded-full'>
       </div>
       <div className='flex flex-col gap-8'>
         <h4 className='text-center text-2xl'>Comentarios</h4>

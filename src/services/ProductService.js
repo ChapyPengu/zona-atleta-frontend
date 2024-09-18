@@ -2,6 +2,11 @@ import axios from './intance/instance'
 
 class ProductService {
 
+  static async pauseProduct(id) {
+    const response = await axios.put(`/api/product/${id}/pause`)
+    return response.data
+  }
+
   static async getProductsRequest(offset, limit, { name, category, gender } = {}) {
     let query = `/api/product?offset=${offset}&limit=${limit}`
     if (name) {
@@ -29,22 +34,6 @@ class ProductService {
     return response.data
   }
 
-  static async postComment({ clientId, productId, message }) {
-    const comment = await axios.post(`/api/product/${productId}/comment`, {
-      message,
-      clientId
-    })
-    return comment.data
-  }
-
-  static async postResponse(commentId, message) {
-    const response = await axios.post(`/api/product/response`, {
-      commentId,
-      message
-    })
-    return response.data
-  }
-
   static async getDiscounts(offset, limit) {
     const response = await axios.get(`/api/product/from/discount?offset=${offset}&limit=${limit}`)
     return response.data
@@ -68,27 +57,6 @@ class ProductService {
       stock,
       available
     })
-    return response.data
-  }
-
-  static async getCommentNotView() {
-    const response = await axios.get('/api/product/get/comment')
-    return response.data
-  }
-
-  static async getResponseNotView({ clientId }) {
-    const response = await axios.get(`/api/product/${clientId}/response`)
-    return response.data
-  }
-
-  static async putCommentView({ commentId }) {
-    const response = await axios.put(`/api/product/${commentId}/comment`)
-    console.log(response.data)
-    return response.data
-  }
-
-  static async putResponseView({ clientId }) {
-    const response = await axios.put(`/api/product/${clientId}/response`)
     return response.data
   }
 }

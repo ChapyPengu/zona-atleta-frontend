@@ -9,16 +9,15 @@ import Button from '../../components/Button'
 import Utilities from '../../utilities/Utilities'
 import Loader from 'react-spinners/ClipLoader'
 
-function ProductCard({ product }) {
+function ProductCard({ product, auth, disabled, addProduct, buyOne }) {
 
   const [loadingAdd, setLoadingAdd] = useState(false)
   const [loadingBuy, setLoadingBuy] = useState(false)
   const [hasProduct, setHasProduct] = useState(product.have)
-  const [wantProduct, setWantProduct] = useState(false)
 
   const navigate = useNavigate()
-  const { addProduct, buyOne } = useBuy()
-  const user = useUser()
+
+  const noActive = disabled || loadingAdd || loadingBuy
 
   function handleClick(e) {
     e.stopPropagation()
@@ -27,13 +26,19 @@ function ProductCard({ product }) {
 
   async function handleClickAdd(e) {
     e.stopPropagation()
+    if (!auth) {
+      navigate('/login')
+      return
+    }
+    if (disabled) {
+      return
+    }
     if (loadingAdd || loadingBuy) return
     try {
       setLoadingAdd(true)
       await addProduct(product)
       setLoadingAdd(false)
       setHasProduct(true)
-      user.setNotifications(user.notifications + 1)
     } catch (e) {
       console.log(e)
     }
@@ -42,6 +47,13 @@ function ProductCard({ product }) {
   async function handleClickBuy(e) {
     e.stopPropagation()
     if (loadingAdd || loadingBuy) return
+    if (!auth) {
+      navigate('/login')
+      return
+    }
+    if (disabled) {
+      return
+    }
     try {
       setLoadingBuy(true)
       await buyOne(product)
@@ -50,6 +62,7 @@ function ProductCard({ product }) {
       console.log(e)
     }
   }
+
 
   return (
     <div className='product-card' onClick={handleClick}>
@@ -62,27 +75,29 @@ function ProductCard({ product }) {
           <p className='product-card__name'>{product.name}</p>
           <p className='product-card__price'>${Utilities.formatNumberToPrice(product.price)}</p>
         </div>
-        <div className='flex justify-start gap-8'>
+        <div className=''>
           {
             hasProduct
               ? <Link to='/shopping-cart' onClick={e => e.stopPropagation()}>
-                <Button>
+                <Button disabled={disabled}>
                   <div className='flex items-center gap-4'>Ir al carrito de compras <ShoppingCart /></div>
                 </Button>
               </Link>
               : <div className='flex justify-start gap-4'>
-                <Button className='' variant='outline' title='Comprar' onClick={handleClickBuy} disabled={loadingAdd || loadingBuy}>
+                <Button className='' title='Comprar' onClick={handleClickBuy} disabled={noActive}>
                   {
                     loadingBuy
-                      ? <Loader className='loader-color' color='#ed3237' />
+                      ? <Loader className='loader-color' color='white' />
                       : 'Comprar'
                   }
                 </Button>
-                <Button className='' title='Agregar al carrito' onClick={handleClickAdd} disabled={loadingAdd || loadingBuy}>
+                <Button variant='outline' className='flex justify-center items-center gap-4 hover:*:fill-white' title='Agregar al carrito' onClick={handleClickAdd} disabled={noActive}>
                   {
                     loadingAdd
                       ? <Loader className='loader-color' color='white' />
-                      : <div className='flex items-center gap-4'>Agregar al Carrito <ShoppingCart /></div>
+                      : <>
+                        Agregar al Carrito
+                      </>
                   }
                 </Button>
               </div>
@@ -95,12 +110,30 @@ function ProductCard({ product }) {
 
 function Product() {
 
+  const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([])
   const [nameValue, setNameValue] = useState('')
   const [categoryValue, setCategoryValue] = useState('')
   const [genderValue, setGenderValue] = useState('')
 
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const { addProduct, buyOne, haveProduct } = useBuy()
+  const user = useUser()
+
+  const limit = 20
+  const offset = 0
+
+  async function handleMoreProducts() {
+    setLoading(true)
+    try {
+      const data = await ProductService.getProductsRequest(offset + products.length, limit)
+      setProducts([...products, ...data.results.map(p => ({ ...p, have: haveProduct(p) }))])
+    } catch (e) {
+      console.log(e)
+    }
+    setLoading(false)
+  }
 
   useEffect(() => {
     async function getProducts() {
@@ -127,8 +160,7 @@ function Product() {
           setGenderValue(gender)
         }
         const data = await ProductService.getProductsRequest(0, 20, { name, category, gender })
-        console.log(data.results)
-        setProducts(data.results)
+        setProducts(data.results.map(p => ({ ...p, have: haveProduct(p) })))
       } catch (e) {
         console.log(e)
       }
@@ -156,14 +188,30 @@ function Product() {
             : <></>
         }
       </div>
-      <div>
+      <div className='mt-12'>
         {
           products.length === 0
             ? <p className='text-center text-2xl text-primary font-bold'>No se encontraron productos</p>
             : <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
               {
-                products.map((p, i) => <ProductCard key={i} product={p} />)
+                products.map((p, i) => <ProductCard
+                  key={i}
+                  product={p}
+                  auth={!user.isNone()}
+                  disabled={user.isSalesManager()}
+                  addProduct={addProduct}
+                  buyOne={buyOne}
+                />)
               }
+            </div>
+        }
+        {
+          loading
+            ? <div className='flex justify-center items-center mt-12'>
+              <Loader size={64} color='#ed3237' />
+            </div>
+            : <div className='flex justify-center items-center mt-12'>
+              <Button onClick={handleMoreProducts}>Cargar mas productos</Button>
             </div>
         }
       </div>

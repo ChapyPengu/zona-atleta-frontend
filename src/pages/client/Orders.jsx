@@ -12,7 +12,8 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 const STATES = {
-  pendiente: 'pendiente de pago'
+  pendiente: 'pendiente de pago',
+  aprovado: 'pago aprobado'
 }
 
 function OrderCard({ order, onClick = () => { }, loading }) {
@@ -20,7 +21,7 @@ function OrderCard({ order, onClick = () => { }, loading }) {
   const date = (new Date(order.date)).toLocaleDateString()
 
   return (
-    <div className='flex p-0.5 border border-gray-900/20 rounded-md shadow-md'>
+    <div className='flex flex-col md:flex-row p-0.5 border border-gray-900/20 rounded-md shadow-md'>
       <div>
         <img className='w-64 h-64' src={firstProduct.image} alt={firstProduct.name} />
       </div>
@@ -39,8 +40,13 @@ function OrderCard({ order, onClick = () => { }, loading }) {
               : <></>
           }
         </section>
-        <footer className='flex justify-center'>
-          <Link to={`/order/${order.id}`} className='hover:text-primary hover:underline'>Ver detalles del pedido</Link>
+        <footer className='flex justify-center flex-col items-center gap-2'>
+          <Link to={`/order/${order.id}`} className=' hover:text-primary hover:underline'>Ver detalles del pedido</Link>
+          {
+            order.state === STATES.aprovado
+              ? <Link className='hover:text-primary hover:underline text-center ' to={`https://www.mercadopago.com.ar/post-purchase/init-flow/setup?fulfilled=false&resource=payment&resource_id=${order.paymentId}`}>Cancelar Compra</Link>
+              : <></>
+          }
         </footer>
       </div>
     </div>
@@ -127,7 +133,7 @@ function Order() {
   }, [user])
 
   return (
-    <div className='min-h-[768px] py-32'>
+    <div className='min-h-[768px] py-32 px-8 md:px-0'>
       {
         loading
           ? <div className='flex justify-center'>
@@ -141,7 +147,7 @@ function Order() {
               <header className='mb-16'>
                 <Title className='text-center'>Pedidos realizados</Title>
               </header>
-              <div className='flex flex-col justify-start items-center'>
+              <div className='flex flex-col justify-start items-center gap-4'>
                 {
                   orders.map((o, i) => <OrderCard key={i} order={o} onClick={getHandleClick(o)} loading={loadingSetAddress} />)
                 }

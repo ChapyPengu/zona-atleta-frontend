@@ -2,12 +2,16 @@ import React from 'react'
 import Button from '../Button'
 import Utilities from '../../utilities/Utilities'
 
-function ProductCard({ product, setProductId = () => { }, showEditProduct = () => { }, onClickDelete = () => {} }) {
+function ProductCard({ product, setProductId = () => { }, showEditProduct = () => { }, onClickPause = () => {} }) {
 
   function handleEditClick() {
     setProductId(product.id)
     showEditProduct()
   }
+
+  // function handlePauseClick() {
+  //   showEditProduct()
+  // }
 
   return (
     <div className='flex flex-col gap-4 justify-between border border-gray-700/40 p-4 rounded shadow'>
@@ -23,7 +27,7 @@ function ProductCard({ product, setProductId = () => { }, showEditProduct = () =
 
       <div className='h-full flex gap-4 items-end'>
         <Button onClick={handleEditClick}>Editar</Button>
-        <Button variant='outline' onClick={onClickDelete}>Eliminar</Button>
+        <Button variant='outline' onClick={onClickPause}>Pausar</Button>
       </div>
     </div>
   )

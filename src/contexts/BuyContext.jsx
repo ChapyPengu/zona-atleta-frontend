@@ -1,15 +1,12 @@
 import { useState, useContext, createContext, useEffect } from 'react'
 import { useUser } from './UserContext'
 import ClientService from '../services/ClientService'
-
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 const MySwal = withReactContent(Swal)
 
 const BuyContext = createContext()
-
-
 
 export function useBuy() {
   const context = useContext(BuyContext)
@@ -29,22 +26,30 @@ export function BuyContextProvider({ children }) {
 
   async function addProduct(product) {
     if (!user.isClient()) return
-    const data = await ClientService.postProduct(user.id, product.id, { amount: 1 })
-    console.log(data)
+    try {
+      const data = await ClientService.postProduct(user.id, product.id, { amount: 1 })
+      const res = await ClientService.getProducts(user.id)
+      setProducts(res)
+      // setProducts([...product, product])
+    } catch (e) {
+      console.log(e)
+    }
   }
 
 
   async function deleteProduct(product) {
     if (!user.isClient()) return
     const data = await ClientService.deleteProduct(user.id, product.id)
-    console.log(data)
+    const res = await ClientService.getProducts(user.id)
+    setProducts(res)
   }
 
 
   async function editProduct(product, { amount }) {
     if (!user.isClient()) return
     const data = await ClientService.putProduct(user.id, product.id, { amount })
-    console.log(data)
+    const res = await ClientService.getProducts(user.id)
+    setProducts(res)
   }
 
 

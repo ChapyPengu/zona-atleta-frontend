@@ -10,24 +10,22 @@ import ErrorMessage from '../../components/ErrorMessage'
 function FavoriteCard({ product, onClick = () => { }, loading }) {
 
   return (
-    <div className='rounded-md shadow-md flex items-center justify-start'>
-      <div className='flex'>
-        <div>
-          <img className='w-64 h-64' src={product.image} />
-        </div>
-        <div className='min-w-96 flex flex-col justify-start items-center py-4 px-8 gap-4'>
-          <p className='text-2xl font-medium mb-2'>{product.name}</p>
-          <Button onClick={onClick} className='flex justify-center items-center'>
-            {
-              loading
-                ? <Loader color='#fff' />
-                : 'Eliminar de favoritos'
-            }
-          </Button>
-          <Link className='hover:text-primary hover:underline' to={`/product/${product.id}`}>
-            Ir al producto
-          </Link>
-        </div>
+    <div className='rounded-md shadow-md flex flex-col md:flex-row md:items-center md:justify-start'>
+      <div>
+        <img className='min-w-64 min-h-64' src={product.image} />
+      </div>
+      <div className='w-full flex flex-col py-4 px-8 gap-4'>
+        <p className='text-xl font-medium mb-2 max-w-[256px]'>{product.name}</p>
+        <Button onClick={onClick} className='w-full flex justify-center items-center'>
+          {
+            loading
+              ? <Loader color='#fff' />
+              : 'Eliminar de favoritos'
+          }
+        </Button>
+        <Link className='hover:text-primary hover:underline' to={`/product/${product.id}`}>
+          Ir al producto
+        </Link>
       </div>
     </div>
   )
@@ -71,7 +69,7 @@ function Favorites() {
       <div>
         <h4 className='text-2xl font-bold pl-8 uppercase text-primary my-8'>Tus favoritos</h4>
       </div>
-      <div className='max-w-max mx-auto'>
+      <div className='max-w-max mx-auto flex flex-col gap-8'>
         {
           favorites.length === 0
             ? <Link to='/home'>

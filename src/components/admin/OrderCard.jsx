@@ -17,8 +17,6 @@ function OrderCard({ order, delivery, cancel }) {
 
   async function handleCancelClick() {
     await cancel(order.id)
-    // setTimeout(() => {
-    // }, 250)
   }
 
   return (
@@ -27,7 +25,11 @@ function OrderCard({ order, delivery, cancel }) {
       <p>Fecha: {date.toLocaleDateString()}</p>
       <p>Estado: {order.state}</p>
       <div className="mt-2 flex gap-2">
-        <Button onClick={handleDeliveryClick} className="text-sm py-2 px-0 w-full">Realizar Entrega</Button>
+        {
+          order.state !== 'entregado'
+            ? <Button onClick={handleDeliveryClick} className="text-sm py-2 px-0 w-full">Realizar Entrega</Button>
+            : <></>
+        }
         {
           order.state === 'pago aprobado'
             ? <Button onClick={handleCancelClick} className="text-sm py-2 px-0 w-full" variant="outline">Cancelar Pedido</Button>

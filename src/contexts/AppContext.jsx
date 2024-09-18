@@ -16,14 +16,6 @@ export function useApp() {
 
 export function AppContextProvider({ children }) {
 
-  // useEffect(() => {
-  //   socket.on('notification', () => {
-  //     const noti = new Audio('/sounds/notification.mp3')
-  //   // noti.play()
-  //     document.title = `${name}`
-  //   })
-  // }, [])
-
   return (
     <AppContext.Provider value={{
       socket

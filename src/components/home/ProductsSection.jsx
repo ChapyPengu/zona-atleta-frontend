@@ -40,7 +40,6 @@ function ProductCard({ product, auth, disabled, addProduct, buyOne, setNotificat
       await addProduct(product)
       setLoadingAdd(false)
       setHasProduct(true)
-      setNotifications(notifications + 1)
     } catch (e) {
       console.log(e)
     }
@@ -110,7 +109,7 @@ function ProductCard({ product, auth, disabled, addProduct, buyOne, setNotificat
   )
 }
 
-function ProductsSection({ title, isLoading, products, page, navigate }) {
+function ProductsSection({ title, isLoading, products, page, navigate, handleMoreProducts }) {
 
   const user = useUser()
   const { addProduct, buyOne } = useBuy()
@@ -135,24 +134,14 @@ function ProductsSection({ title, isLoading, products, page, navigate }) {
     <div>
       <div className='flex justify-between items-center flex-col md:flex-row gap-4'>
         <Subtitle>{title}</Subtitle>
-        <div className='flex gap-4'>
-          <Button onClick={handlePreviousClick}>
-            <Previus className='fill-white' />
-          </Button>
-          {buttonPage}
-          <Button onClick={handleNextClick}>
-            <Next className='fill-white' />
-          </Button>
-        </div>
       </div>
       {
-        isLoading
-          ? <Loader />
-          : products.length === 0
-            ? <div className='flex justify-center mt-8 md:mt-0'>
-              <p className='text-xl text-primary font-semibold text-center'>No se encontraron productos</p>
-            </div>
-            : <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+        products.length === 0
+          ? <div className='flex justify-center mt-8 md:mt-0'>
+            <p className='text-xl text-primary font-semibold text-center'>No se encontraron productos</p>
+          </div>
+          : <>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
               {
                 products.map((p, i) => <ProductCard
                   key={i}
@@ -161,11 +150,20 @@ function ProductsSection({ title, isLoading, products, page, navigate }) {
                   disabled={user.isSalesManager()}
                   addProduct={addProduct}
                   buyOne={buyOne}
-                  notifications={user.notifications}
-                  setNotifications={user.setNotifications}
                 />)
               }
             </div>
+            {
+              isLoading
+                ? <div className='flex justify-center items-center mt-12'>
+                  <Loader size={64} color='#ed3237' />
+                </div>
+                : <div className='flex justify-center items-center mt-12'>
+                  <Button onClick={handleMoreProducts}>Cargar mas productos</Button>
+                </div>
+            }
+
+          </>
       }
     </div>
   )

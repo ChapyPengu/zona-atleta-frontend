@@ -32,7 +32,6 @@ function ShoppingCartDetails({ products, buy }) {
   }
 
   useEffect(() => {
-    console.log(products)
     setTotal(products.reduce((acum, p) => acum + (p.price * p.amount), 0))
   }, [products])
 
@@ -56,13 +55,13 @@ function ShoppingCart() {
   const { loading, products, error, message, buy } = useBuy()
 
   return (
-    <div className='shopping-cart page bg-blue-00 max-w-[1536px] mx-auto'>
+    <div className='w-full max-w-[1536px] mx-auto flex flex-col gap-8 py-16 md:py-32'>
       {
         loading
           ? <Loader size={64} />
           : products.length === 0
             ? <ShoppinCartVoid />
-            : <div className='grid grid-cols-2  justify-center mx-auto gap-8'>
+            : <div className='flex flex-col-reverse md:flex-row'>
               <ShoppingCartList
                 products={products}
               />

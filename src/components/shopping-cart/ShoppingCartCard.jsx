@@ -20,50 +20,42 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
 
   const totalPrice = product.price * product.amount
 
-  const { deleteProduct, editProduct, products, setProducts } = useBuy()
+  const { deleteProduct, editProduct } = useBuy()
 
   const waitOperation = loadingDelete || loadingEdit
 
   async function handleClickEditMinus() {
     setLoadingEdit(true)
     await editProduct(product, { amount: product.amount - 1 })
-    products.find(p => parseInt(p.id) === parseInt(product.id)).amount -= 1
-    setProducts([...products])
     setLoadingEdit(false)
   }
 
   async function handleClickEditAdd() {
     setLoadingEdit(true)
     await editProduct(product, { amount: product.amount + 1 })
-    products.find(p => parseInt(p.id) === parseInt(product.id)).amount += 1
-    setProducts([...products])
     setLoadingEdit(false)
   }
 
   async function handleClickDelete() {
     setLoadingDelete(true)
     await deleteProduct(product)
-    setProducts(products.filter(p => parseInt(p.id) === parseInt(product.id)))
     setLoadingDelete(false)
   }
 
-
-
   return (
-    <div className='w-full flex gap-8'>
+    <div className='w-full flex flex-col md:flex-row gap-4'>
       <div className='flex flex-col gap-4'>
         <div className='grid place-items-center'>
           <img className='min-w-48 min-h-48 bg-primary object-cover' src={product.image}></img>
         </div>
       </div>
-      <div className='w-full flex flex-col gap-8'>
+      <div className='w-full flex flex-col items-center md:items-start gap-8 p-4'>
         <div className='flex flex-col gap-1'>
           <p className='text-xl'>{product.name}</p>
           <p className='font-medium'>Precio por unidad: ${formatearNumeroConPuntos(product.price)}</p>
-          <p className=''>Disponibles: {product.stock}</p>
           <p className='text-lg font-bold'>Total: ${formatearNumeroConPuntos(totalPrice)}</p>
         </div>
-        <div className='flex justify-center gap-4 w-full'>
+        <div className='flex justify-center items-center gap-4 w-full'>
           <div className='flex gap-4 bg-primary py-2 px-4 rounded-full'>
             <button disabled={waitOperation} className='' onClick={handleClickEditMinus}>
               {
@@ -72,7 +64,7 @@ function ShoppingCartCard({ product, onClickMoreProduct, onClickLessProduct, onC
                   : <Minus className='fill-white ' />
               }
             </button>
-            <p className='text-white font-semibold'>
+            <p className='h-full text-white font-semibold flex justify-center items-center'>
               {product.amount}
             </p>
             <button disabled={waitOperation} className='' onClick={handleClickEditAdd}>

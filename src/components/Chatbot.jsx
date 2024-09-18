@@ -12,27 +12,27 @@ const CLIENT_OPTIONS = [
 const SALES_MANAGR_OPTIONS = [
   {
     name: 'Crear productos',
-    response: 'Para crear productos entre al siguiente enlaze.',
+    response: 'Para crear productos entre al siguiente enlace.',
     link: '/admin/product'
   },
   {
     name: 'Cancelar ordenes',
-    response: 'Para cancelar ordenes entre al siguiente enlaze.',
+    response: 'Para cancelar ordenes entre al siguiente enlace.',
     link: '/admin/order'
   },
   {
     name: 'Administrar usuarios',
-    response: 'Para administrar usuarios entre al siguiente enlaze.',
+    response: 'Para administrar usuarios entre al siguiente enlace.',
     link: '/admin/client'
   },
   {
     name: 'Descargar facturas',
-    response: 'Para descargar facturas entre al siguiente enlaze.',
+    response: 'Para descargar facturas entre al siguiente enlace.',
     link: '/admin/order'
   },
   {
     name: 'Seguimiento de ventas',
-    response: 'Para ver el seguimiento entre al siguiente enlaze.',
+    response: 'Para ver el seguimiento entre al siguiente enlace.',
     link: '/admin/order'
   }
 ]
